@@ -1,0 +1,265 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Raleway', sans-serif;
+
+}
+
+.madeSimple {
+    width: 100%;
+    height: 100vh;
+    background-image: url(images/page_191.png);
+    background-size: cover;
+    background-position: center;
+    border-top: 3px solid #000;
+    display: grid;
+    align-items: center;
+    justify-items: center;
+
+    grid-template-rows:
+        [main-start] 1fr [content-start] 2fr [content-end] 0.6fr [main-end];
+
+    grid-template-columns:
+        [main-start] 1fr [content-start] 1fr [content-end] 1fr [main-end];
+}
+
+.footerSimple {
+    grid-column: main-start / main-end;
+    grid-row: content-end / main-end;
+    justify-self: center;
+    align-self: center;
+}
+
+.footerSimple a  {
+    /* top right bot left */
+   /* / padding: 6rem; */
+    /* margin: 0rem, 2rem, 0rem, 2rem; */
+    margin:0 2rem;
+}
+
+.simpleDescription {
+    padding:4rem;
+    text-align: center;
+    font-weight: bolder;
+    grid-column: main-start / main-end;
+    grid-row: main-start / content-start;
+    align-self: center;
+}
+
+.simpleDescription h1 {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 500;
+    font-size: 6rem;
+    color: #d25523;
+
+    padding-bottom: 1rem;
+}
+
+.simpleDescription p {
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 600;
+    line-height: 1.2;
+
+}
+
+.centerSimple {
+    width: 80vw;
+    height: 50vh;
+    padding: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    grid-column: main-start / main-end;
+    grid-row: content-start / content-end;
+    /* align vertically on y axis*/
+    align-self: start;
+    /* justify on x axis  */
+    justify-self: center;
+
+    align-content: space-around;
+
+    justify-content: space-around;
+
+}
+
+.labelsSimple {
+    display: flex;
+    width: 25rem;
+
+    padding: 0.7rem;
+    justify-content: space-between;
+
+}
+
+.labelsSimple button {
+    /* align-self: start;
+    justify-self:  end; */
+    margin-top: -0.1rem;
+
+    background: #FF6329;
+    color: #fff;
+}
+
+.labelsSimple button:hover {
+    width: 140px;
+    background: #fa5a20;
+    color: #1b1111;
+
+
+}
+
+.leftLabel {
+    font-family: 'Raleway', sans-serif;
+    display: inline-block;
+}
+
+.leftLabel h3 {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.1rem;
+    font-weight: bolder;
+}
+
+.leftLabel h6 {
+    margin-top: 0.5rem;
+    font-family: 'Raleway', sans-serif;
+    font-size: 0.7rem;
+    font-weight: bold;
+    color: #fa5a20;
+}
+
+
+
+
+.fruits {
+    border-radius: 30px;
+    box-sizing: content-box;
+    padding: 5rem;
+
+    width: 15rem;
+    height: 15rem;
+    border: 3px solid #000;
+    display: flex;
+
+    align-content: center;
+    justify-content: center;
+}
+
+.fruits img {
+    flex-shrink: 0;
+    /* justify-self: center; */
+}
+
+.simplePear {
+    transform: scale(1.3);
+}
+
+.simpleAnanas {
+    transform: scale(1.3);
+}
+
+.arrowSimple1{
+    transition: transform .3s;
+
+
+    animation: slideArr1 3s ease-in-out infinite;
+
+}
+
+.arrowSimple2{
+    transition: transform .3s;
+
+
+    animation: slideArr2 3s ease-in-out infinite;
+
+}
+
+@keyframes slideArr1 {
+    0%,
+
+    10% {
+        transform:  translate(-2px, 0);
+    }
+
+    20% {
+        transform: translate(-4px, 0);
+    }
+
+    30% {
+        transform:  translate(-6px, 0);
+    }
+
+    40% {
+        transform: translate(-8px,0);
+    }
+
+    50% {
+        transform: translate(-10px, 0);
+    }
+
+    60% {
+        transform:  translate(-8px, 0);
+    }
+
+    70% {
+        transform:  translate(-6px, 0);
+    }
+
+    80% {
+        transform: translate(-4px, 0);
+    }
+
+    90% {
+        transform:  translate(-2px, 0);
+    }
+
+    100% {
+        transform:  translate(-0px, 0);
+    }
+}
+
+
+
+@keyframes slideArr2 {
+    0%,
+
+    10% {
+        transform:  translate(2px, 0);
+    }
+
+    20% {
+        transform: translate(4px, 0);
+    }
+
+    30% {
+        transform:  translate(6px, 0);
+    }
+
+    40% {
+        transform: translate(8px,0);
+    }
+
+    50% {
+        transform: translate(10px, 0);
+    }
+
+    60% {
+        transform:  translate(8px, 0);
+    }
+
+    70% {
+        transform:  translate(6px, 0);
+    }
+
+    80% {
+        transform: translate(4px, 0);
+    }
+
+    90% {
+        transform:  translate(2px, 0);
+    }
+
+    100% {
+        transform:  translate(0px, 0);
+    }
+}
+

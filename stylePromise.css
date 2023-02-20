@@ -1,0 +1,103 @@
+/* add your CSS here */
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Raleway', sans-serif;
+
+}
+
+.promise {
+    width: 100%;
+    height: 80vh;
+    background-image: url(images/page_14.png);
+    background-size: cover;
+    background-position: center;
+    border-top: 3px solid #000;
+
+}
+
+.promiseContent {
+    width: 100%;
+    height: 80vh;
+    display: grid;
+    align-items:center;
+    justify-items: center;
+    /* column-gap: 10px; */
+    /* row-gap: 1em; */
+    grid-template-rows:
+        [main-start] 1fr [content-start] 3fr  [content-end]  1fr [main-end];
+
+    grid-template-columns:
+    [main-start] 1fr [content-start] 4fr [content-end] 1fr [main-end]
+
+}
+
+.pearPromise {
+    transform: scale(1.3);
+    margin-top: -1.5rem;
+    /* padding: 3rem; */
+    /* position: absolute; */
+    align-self: start;
+    grid-column: content-end / main-end;
+    grid-row: content-start  / content-start;
+}
+
+.bananaPromise {
+    padding: 3rem;
+    margin-top: -15rem;
+    grid-row: content-end/ content-end;
+    grid-column:  main-start / content-start;
+}
+
+.centerPromise {
+    font-family: 'Raleway', sans-serif;
+    text-align: center;
+    color: antiquewhite;
+    font-weight: bolder;
+    grid-row: content-start / content-end;
+    grid-column: content-start / content-end
+}
+
+.centerPromise h2 {
+    font-size: 1.7rem;
+    padding-bottom: 1.3rem;
+    color: black;
+
+}
+
+.centerPromise h1 {
+
+    font-family: 'Raleway', sans-serif;
+
+    font-size: 8rem;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: 0.1rem;
+    padding-bottom: 2rem;
+
+}
+
+.centerPromise p {
+
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    padding-bottom: 1.5rem;
+
+}
+
+.centerPromise button {
+    width: 140px;
+    font-size: 1rem;
+    background: antiquewhite;
+    color: #FF6329;
+
+}
+
+.centerPromise button:hover {
+    width: 150px;
+    background: #ec5d28;
+    color: antiquewhite;
+
+
+}
