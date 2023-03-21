@@ -1,0 +1,576 @@
+/* add your CSS here */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-image: linear-gradient(120deg, #95b46a, #709255);
+    /*background-image: linear-gradient(120deg, #3c6206, #285704);*/
+    color: #fcfaf5;
+    font-family: "Poppins", sans-serif;
+    min-height: 100vh;
+}
+
+.gridBody {
+    height: 100vh;
+    justify-items: center;
+    align-items: start;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.right-grid {
+    grid-column: 2 / 8;
+
+}
+
+.main-header {
+
+    font-size: 1.5rem;
+}
+
+.main-header, form {
+    min-height: 20vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.firstRow {
+    min-height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+
+form {
+
+    flex-direction: column;
+}
+
+.firstRow input, .firstRow button {
+    padding: 0.5rem;
+    font-size: 2rem;
+    border: none;
+    background: white;
+    outline: none;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.4);
+}
+
+.firstRow button {
+    color: #3E5622;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.firstRow button:hover {
+    background: #3E5622;
+    color: white;
+}
+
+.todo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 7vh;
+}
+
+.todo-list {
+    min-width: 30%;
+    list-style: none;
+
+}
+
+.todo {
+    margin: 0.5rem;
+    background: white;
+    color: black;
+    font-size: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.7s ease;
+    border-radius: 8px;
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.2);
+    /*flex-direction: column;*/
+}
+
+.todo li {
+    color: #0d2a01;
+    flex: 1;
+}
+
+.lateDeadline {
+    color: red;
+}
+
+.todo .timeT {
+    margin-right: 1.5rem;
+}
+
+.timeT, .dateT {
+    font-size: 1.3rem;
+    /*color: #233b06;*/
+}
+
+.todo .fa-calendar, .todo .fa-clock {
+
+    margin-left: 2rem;
+    margin-right: 0.5rem;
+    /*color: #3E5622;*/
+    font-size: 1.15rem;
+}
+
+.todo .fa-circle {
+    margin-left: 1.5rem;
+    /*margin-right: 0.1rem;*/
+    color: gray;
+    font-size: 0.4rem;
+}
+
+
+.delete-btn, .complete-btn {
+    background: #3E5622;
+    color: white;
+    border: black;
+    padding: 1rem;
+    cursor: pointer;
+    font-size: 1.1rem;
+
+}
+
+.delete-btn {
+
+    /*border-top-right-radius: 8px;*/
+    /*border-bottom-right-radius: 8px;*/
+    background: #E57440;
+}
+
+.delete-btn:hover {
+    cursor: pointer;
+    background: #fa3d3d;
+}
+
+.complete-btn:hover {
+    cursor: pointer;
+    background: #24ad05;
+    /*color: #3E5622;*/
+}
+
+/*the class of the li item*/
+.todo-item {
+    padding: 0 0.5rem;
+}
+
+.fa-trash, .fa-check {
+    pointer-events: none;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: black;
+    opacity: 0.5;
+}
+
+.fall-anim {
+    transform: translateY(7rem) rotateZ(20deg);
+    opacity: 0;
+}
+
+.filter-todo {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    outline: none;
+    border: none;
+    background: white;
+
+}
+
+.select {
+    margin: 1rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.4);
+}
+
+.filter-todo {
+    color: #3E5622;
+    width: 10rem;
+    padding: 1rem;
+    cursor: pointer;
+
+}
+
+.select::after {
+    /* the arrow*/
+    content: "\25BC";
+    position: absolute;
+    background: #3E5622;
+    top: 0;
+    right: 0;
+    padding: 1rem;
+    pointer-events: none;
+    transition: all 0.3s ease;
+}
+
+.select:hover::after {
+    /* the arrow*/
+    background: #e7fde7;
+    color: #3E5622;
+}
+
+.popUpMain {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 1001;
+
+}
+
+.popup {
+    width: 600px;
+    height: 300px;
+    background-image: linear-gradient(120deg, #33362d, #373b2c);
+    background-size: cover;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-shadow: 1px 2px 5px 3px black;
+    text-align: center;
+
+}
+
+.popup h1 {
+    font-size: 3rem;
+    transform: translateY(50px);
+    color: burlywood;
+}
+
+.popup input {
+    width: 60%;
+    padding: 5px;
+    margin-top: 80px;
+    margin-bottom: 20px;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    background: transparent;
+    outline: none;
+    text-align: center;
+    color: burlywood;
+    /*padding: 0.5rem;*/
+    font-size: 2rem;
+    /*font-weight: bold;*/
+}
+
+
+.popup button {
+    /*background-color: #0d3f04;*/
+    /*min-width: 40%;*/
+    border-radius: 12px;
+    border-color: #DEB887FF;
+
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    font-size: 2rem;
+    background-color: transparent;
+    color: bisque;
+}
+
+.popup button:hover {
+    background-image: linear-gradient(180deg, #0d2a01, #282826);
+}
+
+
+.secondRow {
+    justify-content: space-between;
+    background: transparent;
+    /*align-self: center;*/
+    /*margin-left: -2vw;*/
+    font-size: 12px;
+    color: white;
+    display: flex;
+    gap: 20px;
+}
+
+.secondRow label {
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
+    background: transparent;
+    position: relative;
+    top: 1vh;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    text-transform: capitalize;
+    border: 1px solid #EEE;
+}
+
+.secondRow label:hover {
+    background-color: #3E5622;
+}
+
+.secondRow input {
+    border-right: #EEE;
+    border-top: #EEE;
+    border-left: #EEE;
+    outline: none;
+    background: transparent;
+    cursor: text;
+    color: white;
+    font-weight: bold;
+    padding: 5px;
+}
+
+.secondRow select {
+    background: transparent;
+    font-weight: bold;
+    color: white;
+    border-right: #EEE;
+    border-top: #EEE;
+    border-left: #EEE;
+    cursor: pointer;
+}
+
+/*notifications*/
+#notification-area {
+
+    position: fixed;
+    top: 90vh;
+    right: 10px;
+    width: 250px;
+    height: 10vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}
+
+#notification-area .notification {
+    position: relative;
+    padding: 10px 10px;
+    background: #111;
+    color: #f5f5f5;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 5px;
+    margin: 5px 0px;
+    opacity: 0;
+    left: 20px;
+    animation: showNotification 500ms ease-in-out forwards;
+}
+
+@keyframes showNotification {
+    to {
+        opacity: 1;
+        left: 0px;
+    }
+}
+
+
+#notification-area .notification {
+    display: flex;
+    flex-direction: column;
+    /*align-content: space-evenly;*/
+    /*justify-content: space-between;*/
+    /*justify-content: space-between;*/
+    background: #3E5622;
+}
+
+.firstRowNotif {
+    display: flex;
+    justify-content: space-between;
+}
+
+.notification h3 {
+    display: inline;
+    padding-bottom: 18px;
+    justify-self: center;
+    align-self: center;
+    font-weight: bolder;
+
+}
+
+.notification h4 {
+    text-align: justify;
+    padding-bottom: 18px;
+
+    font-weight: bolder;
+}
+
+.notification h5 {
+    display: inline;
+    justify-self: end;
+    align-self: end;
+    font-weight: bolder;
+    color: beige;
+}
+
+.notification button {
+    color: #0d2a01;
+    font-size: 1rem;
+    align-self: start;
+    /*justify-self: start;*/
+    cursor: pointer;
+    border: none;
+    background: transparent;
+}
+
+.notification button:hover {
+    color: #EEE;
+    /*background: #EEE;*/
+}
+
+.wrapper {
+    display: grid;
+    align-self: center;
+    justify-self: center;
+    color: black;
+    width: 450px;
+    background: #fff;
+    border-radius: 10px;
+    grid-column: 1 / 2;
+    margin-left: 5vw;
+}
+
+.wrapper header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 25px 30px 10px;
+}
+
+header .current-date {
+    font-size: 1.45rem;
+    font-weight: 500;
+}
+
+.calendar {
+    padding: 20px;
+}
+
+.calendar ul {
+    display: flex;
+    list-style: none;
+    flex-wrap: wrap;
+    text-align: center;
+}
+
+.calendar .weeks li {
+    font-weight: bolder;
+}
+
+.calendar .days {
+    margin-bottom: 1.5rem;
+}
+
+.calendar .days li {
+    z-index: 1;
+    margin-top: 2rem;
+    cursor: pointer;
+}
+
+.calendar ul li {
+    display: grid;
+    position: relative;
+    width: calc(100% / 7);
+}
+
+.calendar .days li::before {
+    position: absolute;
+    content: "";
+    height: 40px;
+    width: 40px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 45%;
+    z-index: -1;
+}
+
+.days li:hover::before {
+    background: #f2f2f2;
+    /*color: #4d804c;*/
+}
+
+header .icons span {
+    height: 38px;
+    width: 38px;
+    margin: 0 1px;
+    text-align: center;
+    line-height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    color: #878787;
+    font-size: 1.9rem;
+}
+
+header .icons span:hover {
+    background: #f2f2f2;
+}
+
+.icons span:last-child {
+    margin-right: -10px;
+}
+
+.days li.inactive {
+    color: #878787;
+}
+
+.days li.active {
+    color: #fff;
+}
+
+.days li.active:hover {
+    color: black;
+}
+
+.days li.active::before {
+    background: #3E5622;
+    /*background: #4dada7;*/
+}
+
+.days li.active:hover::before {
+    background: #f2f2f2;
+}
+
+.show-all {
+    display: flex;
+    justify-content: end;
+    align-content: start;
+    padding: 1rem;
+}
+
+.show-all-button {
+    padding: 0.5rem 0.8rem;
+
+    background: #ee6d00;
+    cursor: pointer;
+    color: #eee;
+    border: none;
+    border-radius: 1rem;
+    font-size: 0.9rem;
+    margin-right: 0.4rem;
+    font-weight: bolder;
+}
+
+.show-all-button:hover {
+    background: #fd8824;
+    /*color: #3E5622;*/
+}
+
+.to-do-on-day {
+    background-color: #ee6d00;
+    /*width: calc(100% / 7);*/
+    width: 1rem;
+    height: 0.5rem;
+    border-radius: 40%;
+    justify-self: center;
+}
