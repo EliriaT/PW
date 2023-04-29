@@ -1,17 +1,4 @@
 <template>
-  <!-- 
-    <router-link to="/">Quizzes</router-link> 
-    <form class="d-flex" role="search">
-      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success" type="submit">Search</button>
-    </form>
-    <router-link to="/about">Register</router-link> 
-    <router-link to="/about">Login</router-link> 
-    <router-link to="/about">Reset Account</router-link> -->
-
-
-
-  <!-- <router-view /> -->
 
 <div class="bg-green-100 h-screen w-screen overflow-auto pb-11 ">
   <Navbar/>

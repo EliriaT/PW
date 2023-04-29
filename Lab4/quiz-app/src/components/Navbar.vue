@@ -38,10 +38,24 @@
     md:static absolute bg-gray-900 md:w-auto w-full top-14 duration-100  ease-linear"
       :class="[isOpen ? 'left-0' : 'left-[-100%]']">
 
-      <router-link :to="{name: link.link}" v-for="link in links" :key="link.name">
+      <router-link :to="{name: 'quizzes'}" >
         <li class="md:mx-4 md:my-0 my-4" >
         
-        <a :href="link.link" class="text-xl hover:text-green-500">{{ link.name }}</a>
+        <a href="quizzes" class="text-xl hover:text-green-500">Quizzes</a>
+      </li>
+      </router-link>
+
+      <router-link  :to="{name: 'register'}" >
+        <li class="md:mx-4 md:my-0 my-4" >
+        
+        <a href="register" class="text-xl hover:text-green-500">Register</a>
+      </li>
+      </router-link>
+
+      <router-link :to="{name: 'logout'}" >
+        <li class="md:mx-4 md:my-0 my-4" >
+        
+        <a href="logout" class="text-xl hover:text-green-500">Log Out</a>
       </li>
       </router-link>
       
