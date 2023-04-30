@@ -3,6 +3,7 @@ import QuizzesView from '../views/QuizzesView.vue'
 import QuizView from '../views/QuizView.vue'
 import NotFound from '../views/NotFound.vue'
 import RegisterView from '../views/RegisterView.vue'
+import LoginView from '../views/LoginView.vue'
 
 const routes = [
   {
@@ -17,7 +18,12 @@ const routes = [
   },
   {
     path: '/logout',
-    name: 'logout',
+    name: 'logout'
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: LoginView
   },
   {
     path: '/quiz/:id',

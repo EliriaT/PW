@@ -39,7 +39,7 @@
 
 <script>
 
-
+import { useUserStore } from '../stores/UserStore'
 
 export default {
   components: {
@@ -57,12 +57,6 @@ export default {
     }
   },
   methods: {
-    setUpLocalStorage() {
-      localStorage.setItem("name", this.response.name)
-      localStorage.setItem("surname", this.response.surname)
-      localStorage.setItem("userId", this.response.id)
-    },
-
     handleSubmit() {
       this.error = []
       this.name.length > 2 ?
@@ -93,10 +87,14 @@ export default {
           if (response.ok) {
             response.json().then(json => {
               this.response = json
-              this.setUpLocalStorage()
+              this.userStore.setUser(json.name,json.surname,json.id)
+              this.name = ''
+              this.surname = ''
+
             })
           } else {
             response.json().then(json => {
+             
               this.error = json.message
             })
           }
@@ -105,8 +103,15 @@ export default {
       }
 
     }
+  }, setup() {
+    const userStore = useUserStore()
+
+    return {
+      userStore}
+
   }
 }
+
 </script>
 
 <style></style>
