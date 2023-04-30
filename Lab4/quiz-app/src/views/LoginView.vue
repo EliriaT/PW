@@ -60,7 +60,7 @@ export default {
     watch: {
 
         name(newName, oldName) {
-            this.error = this.error.filter((el) => el !=='Name must be at least 3 characters long')
+            this.error = this.error.filter((el) => el !== 'Name must be at least 3 characters long')
             this.name.length > 2 ?
                 this.error : this.error.push('Name must be at least 3 characters long')
 
@@ -97,17 +97,16 @@ export default {
         handleSubmit() {
             if (this.error.length == 0) {
                 this.loggedUser = this.users.filter(user => user.name == this.name && user.surname == this.surname)
-                this.loggedUser = this.loggedUser[0]
-                
-                if (!this.loggedUser.id) {
+                if (this.loggedUser.length == 0) {
                     this.error.push('No such user!')
                 } else {
+                    this.loggedUser = this.loggedUser[0]
                     this.userStore.setUser(this.loggedUser.name, this.loggedUser.surname, this.loggedUser.id)
                     this.name = ''
                     this.surname = ''
-
+                    this.error = []
+                    this.$router.push({ name: 'quizzes' })
                 }
-
 
             }
 

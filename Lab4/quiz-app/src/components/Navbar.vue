@@ -86,10 +86,12 @@
 import { ref } from '@vue/reactivity'
 import Button from './Button.vue'
 import { useUserStore } from '../stores/UserStore'
+import { useRouter } from 'vue-router'
 
 export default {
   components: { Button },
   setup() {
+    const router = useRouter()
     const userStore = useUserStore()
 
     const isOpen = ref(true)
@@ -115,6 +117,7 @@ export default {
           if (response.ok) {
             response.json().then(json => {
               userStore.$reset()
+              router.push({ name: 'register' })
 
             })
           } else {

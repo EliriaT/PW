@@ -90,6 +90,7 @@ export default {
               this.userStore.setUser(json.name,json.surname,json.id)
               this.name = ''
               this.surname = ''
+              this.$router.push({ name: 'quizzes' })
 
             })
           } else {
