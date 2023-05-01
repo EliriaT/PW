@@ -1,11 +1,8 @@
 <template>
-
-<div class="bg-green-100 h-screen w-screen overflow-auto pb-11 ">
-  <Navbar/>
-  <router-view />
-</div>
-
-
+  <div class="bg-green-100 h-screen w-screen overflow-auto pb-11 ">
+    <Navbar />
+    <router-view />
+  </div>
 </template>
 
 <script>
@@ -19,6 +16,4 @@ export default {
 }
 </script>
 
-<style>
-
-</style>
+<style></style>
