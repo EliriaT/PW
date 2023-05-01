@@ -1,16 +1,21 @@
 <template>
-    <div class="pt-14 overflow-auto md:px-36 flex flex-col px-10 items-center">
-        <h1 class="text-5xl font-bold text-center ">{{ quiz.title }}</h1>
+    <div class="pt-14 overflow-auto md:px-36 flex flex-col px-10  items-center ">
+        <h1 class="text-5xl font-bold text-center text-red-900 ">{{ quiz.title }}</h1>
 
 
 
-        <div class="text-gray-800 font-semibold text-lg text-center py-4">
+        <div v-if="currentQuestion" class="text-gray-600 font-semibold md:text-2xl text-lgtext-center py-4">
             Currently at question {{ currentQuestionIndex + 1 }} of {{ questions.length }}
         </div>
 
         <h2 v-if="currentQuestion"
             class="text-center font-bold lg:text-5xl lg:leading-normal lg:px-48 md:text-4xl md:leading-normal md:px-20  sm:text-2xl sm:leading-normal sm:px-2 text-xl py-10  px-2 ">
             {{ currentQuestion.question }}</h2>
+
+        <h2 v-else class="text-center text-6xl p-9 text-red-800 ">Score: <span
+                class="block text-center text-5xl p-9 text-green-800"
+                :class="{ 'text-red-600': (this.score / this.questions.length * 100) < 50 }"> {{ this.score /
+                    this.questions.length * 100 }} % </span></h2>
 
         <form v-if="currentQuestion" @submit.prevent="handleSubmit"
             class="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-10 justify-items-center pb-16 pt-10">
@@ -22,15 +27,18 @@
                 {{ answer }}
             </button>
         </form>
-        <button @click="nextQuestion"
+        <button v-if="currentQuestion" @click="nextQuestion"
             :class="{ 'cursor-not-allowed': selectedAnswer == '', 'hover:bg-green-300  hover:scale-105': selectedAnswer !== '', 'shake border-red-400 bg-red-200 text-red-900': warnButton }"
-            class=" text-center bg-green-200  border-4 border-yellow-400 rounded-xl text-xl lg:text-3xl  w-1/6 h-12 mb-9 lg:h-16 font-semibold    shadow-lg hover:shadow-xl ">Next</button>
+            class=" text-center bg-green-200  border-4 border-yellow-400 rounded-xl text-xl lg:text-3xl  w-1/6 h-12 mb-9 lg:h-16 font-semibold    shadow-lg hover:shadow-xl ">
+            Next
+        </button>
     </div>
 </template>
 
 <script>
 import { mapStores } from 'pinia'
 import { useUserStore } from '../stores/UserStore'
+import { useErrorStore } from '../stores/ErrorStore'
 
 export default {
     props: ['id'],
@@ -52,7 +60,7 @@ export default {
     },
     computed: {
         // Pinia will add by the default the "Store" suffix to the id  of each store. Thus if the id is "userStore", I can access the store by this.userStoreStore. But I changed the id to simply store.
-        ...mapStores(useUserStore)
+        ...mapStores(useUserStore, useErrorStore)
         // title(){
         //     return quiz.title
         // } 
@@ -122,6 +130,8 @@ export default {
                     response.json().then(json => {
                         console.log(json)
                         this.error = json.message
+                        this.errorStore.setError(json.message[0])
+
                     })
                 }
             })
@@ -142,15 +152,25 @@ export default {
                 "X-Access-Token": "a68baa0fe20a17aea823776f987a2741395d24402430e4e2296bce48f56310ac"
 
             }
+        }).then(response => {
+            if (response.ok) {
+                response.json().then(data => {
+
+                    this.quiz = data
+                    this.questions = data.questions
+                    this.currentQuestion = this.questions[this.currentQuestionIndex]
+                    console.log(this.quiz)
+                })
+            } else {
+                response.json().then(json => {
+                    console.log(json)
+                    this.error = json.message
+                    this.errorStore.setError(json.message)
+
+                })
+            }
         })
-            .then(res => res.json())
-            .then(data => {
-                this.quiz = data
-                this.questions = data.questions
-                this.currentQuestion = this.questions[this.currentQuestionIndex]
-                console.log(this.quiz)
-            })
-            .catch(err => console.log(err.message))
+
     }
 }
 </script>
@@ -183,5 +203,4 @@ export default {
     60% {
         transform: translate3d(4px, 0, 0);
     }
-}
-</style>
+}</style>

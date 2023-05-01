@@ -1,9 +1,9 @@
 <template>
   <div class="mt-11 mx-11 grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 justify-items-center ">
     <!-- cards go here -->
-  
-    <div  v-for="n in 20" :key="n">
-      <router-link  v-for="n in quizzes" :key="n.id" :to="{ name: 'quizView', params: { id: n.id } } ">
+
+    <div v-for="n in 20" :key="n">
+      <router-link v-for="n in quizzes" :key="n.id" :to="{ name: 'quizView', params: { id: n.id } }">
         <Card :header="n.title" :description="'Questions ' + n.questions_count" />
       </router-link>
     </div>
@@ -12,8 +12,9 @@
 </template>
 
 <script>
-
+import { mapStores } from 'pinia'
 import Card from '../components/Card.vue'
+import { useErrorStore } from '../stores/ErrorStore'
 
 export default {
   name: 'QuizzesView',
@@ -26,6 +27,11 @@ export default {
     }
 
   },
+  computed: {
+
+    ...mapStores(useErrorStore)
+
+  },
   mounted() {
     fetch('https://late-glitter-4431.fly.dev/api/v54/quizzes', {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
@@ -34,10 +40,21 @@ export default {
 
       },
 
+    }).then(response => {
+      if (response.ok) {
+        response.json().then(data => {
+          this.quizzes = data
+        })
+      } else {
+        response.json().then(json => {
+          console.log(json)
+          this.errorStore.setError(json.message)
+
+        })
+      }
     })
-      .then(res => res.json())
-      .then(data => this.quizzes = data)
-      .catch(err => console.log(err.message))
+
+
   }
 }
 </script>

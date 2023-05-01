@@ -86,6 +86,7 @@
 import { ref } from '@vue/reactivity'
 import Button from './Button.vue'
 import { useUserStore } from '../stores/UserStore'
+import { useErrorStore } from '../stores/ErrorStore'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -93,6 +94,7 @@ export default {
   setup() {
     const router = useRouter()
     const userStore = useUserStore()
+    const errorStore = useErrorStore()
 
     const isOpen = ref(false)
     let links = [
@@ -122,7 +124,7 @@ export default {
             })
           } else {
             response.json().then(json => {
-             
+              errorStore.setError(json.message)
               console.log(json.message)
             })
           }
@@ -130,7 +132,7 @@ export default {
 
     }
 
-    return { links, isOpen, toggleMenu, userStore, deleteUser }
+    return { links, isOpen, toggleMenu, userStore, deleteUser,errorStore }
   }
 }
 </script>

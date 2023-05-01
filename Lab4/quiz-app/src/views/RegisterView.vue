@@ -40,6 +40,7 @@
 <script>
 
 import { useUserStore } from '../stores/UserStore'
+import { useErrorStore } from '../stores/ErrorStore'
 
 export default {
   components: {
@@ -87,7 +88,7 @@ export default {
           if (response.ok) {
             response.json().then(json => {
               this.response = json
-              this.userStore.setUser(json.name,json.surname,json.id)
+              this.userStore.setUser(json.name, json.surname, json.id)
               this.name = ''
               this.surname = ''
               this.$router.push({ name: 'quizzes' })
@@ -95,8 +96,9 @@ export default {
             })
           } else {
             response.json().then(json => {
-             
-              this.error = json.message
+
+              this.error = [json.message]
+              this.errorStore.setError(json.message)
             })
           }
         })
@@ -106,9 +108,10 @@ export default {
     }
   }, setup() {
     const userStore = useUserStore()
-
+    const errorStore = useErrorStore()
     return {
-      userStore}
+      userStore, errorStore
+    }
 
   }
 }

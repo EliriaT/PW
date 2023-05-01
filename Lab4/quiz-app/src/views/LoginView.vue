@@ -41,6 +41,7 @@
 <script>
 
 import { useUserStore } from '../stores/UserStore'
+import { useErrorStore } from '../stores/ErrorStore'
 
 export default {
     components: {
@@ -88,6 +89,7 @@ export default {
                 response.json().then(json => {
 
                     this.error.push(json.message)
+                    this.errorStore.setError(json.message)
                 })
             }
         })
@@ -113,9 +115,9 @@ export default {
         }
     }, setup() {
         const userStore = useUserStore()
-
+        const errorStore = useErrorStore()
         return {
-            userStore
+            userStore, errorStore
         }
 
     }
