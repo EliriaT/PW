@@ -1,5 +1,5 @@
 <template>
-  <div class="bg-gray-900 text-gray-100 py-3.5 px-6 shadow-md  md:flex justify-between items-center">
+  <div  class="bg-gray-900 text-gray-100 py-3.5 px-6 shadow-md  md:flex justify-between items-center">
 
     <router-link :to="{ name: 'quizzes' }">
       <div class="flex items-center cursor-pointer">
@@ -19,7 +19,7 @@
       </div>
     </router-link>
 
-    <span @click="toggleMenu()" class="absolute md:hidden right-6 top-4 cursor-pointer text-3xl">
+    <span @click="toggleMenu()" class="absolute md:hidden right-6 top-2 cursor-pointer text-3xl p-2">
 
       <svg v-if="!isOpen" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
         stroke="currentColor" class="w-6 h-6">
@@ -94,7 +94,7 @@ export default {
     const router = useRouter()
     const userStore = useUserStore()
 
-    const isOpen = ref(true)
+    const isOpen = ref(false)
     let links = [
       { name: "Quizzes", link: "quizzes" },
       { name: "Register", link: "register" },
