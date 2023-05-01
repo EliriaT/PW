@@ -44,6 +44,7 @@ export default {
       if (response.ok) {
         response.json().then(data => {
           this.quizzes = data
+          console.log(data)
         })
       } else {
         response.json().then(json => {
