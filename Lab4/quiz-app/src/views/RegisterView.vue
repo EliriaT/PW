@@ -57,15 +57,30 @@ export default {
 
     }
   },
-  methods: {
-    handleSubmit() {
-      this.error = []
+  watch: {
+
+    name(newName, oldName) {
+      this.error = this.error.filter((el) => el !== 'Name must be at least 3 characters long')
       this.name.length > 2 ?
-        [] : this.error.push('Name must be at least 3 characters long')
+        this.error : this.error.push('Name must be at least 3 characters long')
 
 
+    },
+    surname(newSurname, oldSurname) {
+      this.error = this.error.filter((el) => el !== 'Surname must be at least 3 characters long')
       this.surname.length > 2 ?
         this.error : this.error.push('Surname must be at least 3 characters long')
+    }
+  },
+  methods: {
+    handleSubmit() {
+      // this.error = []
+      // this.name.length > 2 ?
+      //   [] : this.error.push('Name must be at least 3 characters long')
+
+
+      // this.surname.length > 2 ?
+      //   this.error : this.error.push('Surname must be at least 3 characters long')
 
 
       if (this.error.length == 0) {

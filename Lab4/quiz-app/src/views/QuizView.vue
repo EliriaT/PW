@@ -9,7 +9,7 @@
         </div>
 
         <h2 v-if="currentQuestion"
-            class="text-center font-bold lg:text-5xl lg:leading-normal lg:px-48 md:text-4xl md:leading-normal md:px-20  sm:text-2xl sm:leading-normal sm:px-2 text-xl py-10  px-2 ">
+            class="text-center font-bold xl:text-4xl xl:px-40 xl:leading-normal  lg:text-3xl lg:leading-normal lg:px-2 md:text-2xl md:leading-normal md:px-2  sm:text-2xl sm:leading-normal sm:px-2 text-xl py-10  px-2 ">
             {{ currentQuestion.question }}</h2>
 
         <h2 v-else class="text-center text-6xl p-9 text-red-800 ">Score: <span
@@ -29,7 +29,7 @@
         </form>
         <button v-if="currentQuestion" @click="nextQuestion"
             :class="{ 'cursor-not-allowed': selectedAnswer == '', 'hover:bg-green-300  hover:scale-105': selectedAnswer !== '', 'shake border-red-400 bg-red-200 text-red-900': warnButton }"
-            class=" text-center bg-green-200  border-4 border-yellow-400 rounded-xl text-xl lg:text-3xl  w-1/6 h-12 mb-9 lg:h-16 font-semibold    shadow-lg hover:shadow-xl ">
+            class=" text-center bg-green-200  border-4 border-yellow-400 rounded-xl text-xl lg:text-3xl  w-1/6 h-12  sm:w-1/2 lg:w-1/6  mb-9 lg:h-16 font-semibold    shadow-lg hover:shadow-xl  ">
             Next
         </button>
     </div>
@@ -48,7 +48,7 @@ export default {
             warnButton: false,
             quiz: {},
             questions: [],
-            currentQuestionIndex: 0,
+            currentQuestionIndex: 2,
             currentQuestion: {},
             selectedAnswer: '',
             body: {},
