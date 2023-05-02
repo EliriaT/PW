@@ -77,7 +77,7 @@ export default {
                 this.constructRequestBody()
                 this.submitAnswer()
                 this.resetData()
-                
+
             }
         },
         handleClick(e) {
@@ -143,6 +143,7 @@ export default {
             this.selectedAnswer = ''
 
         }
+
     },
 
     mounted() {
@@ -160,7 +161,7 @@ export default {
                     this.questions = data.questions
 
                     const quiz = this.quizzesStore.getQuizState(this.userStore.user.id, this.id)
-            
+
 
                     if (!quiz.lastAnsweredIndex) {
                         this.currentQuestionIndex = 0
