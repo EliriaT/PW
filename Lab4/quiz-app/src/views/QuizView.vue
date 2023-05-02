@@ -37,6 +37,7 @@
 import { mapStores } from 'pinia'
 import { useUserStore } from '../stores/UserStore'
 import { useErrorStore } from '../stores/ErrorStore'
+import { useQuizzesStore } from '../stores/QuizStore'
 
 export default {
     props: ['id'],
@@ -58,10 +59,8 @@ export default {
     },
     computed: {
         // Pinia will add by the default the "Store" suffix to the id  of each store. Thus if the id is "userStore", I can access the store by this.userStoreStore. But I changed the id to simply store.
-        ...mapStores(useUserStore, useErrorStore)
-        // title(){
-        //     return quiz.title
-        // } 
+        ...mapStores(useUserStore, useErrorStore, useQuizzesStore)
+
     },
     methods: {
         warnSelectAnswer() {
@@ -78,10 +77,10 @@ export default {
                 this.constructRequestBody()
                 this.submitAnswer()
                 this.resetData()
+                
             }
         },
         handleClick(e) {
-
             if (this.selectedAnswer == e.target.__vnode.key) {
                 this.selectedAnswer = ''
             } else {
@@ -101,8 +100,6 @@ export default {
 
         }
         ,
-        // TODO i should save  the state of the passed quizz as started, passed, or init. If the user clicks on a started quizz, he should start it from the last unanswered question
-        // I should disable going back from the browser in router here 
         submitAnswer() {
 
             fetch('https://late-glitter-4431.fly.dev/api/v54/quizzes/' + this.quiz.id + "/submit", {
@@ -121,8 +118,10 @@ export default {
                         if (this.response.correct === true) {
                             this.score += 1
                         }
-                        console.log(json)
                         console.log(this.score)
+                        this.quizzesStore.saveAnswer(this.userStore.user.id, this.id, this.score)
+                        // console.log(json)
+                        // console.log(this.score)
                     })
                 } else {
                     response.json().then(json => {
@@ -159,8 +158,20 @@ export default {
 
                     this.quiz = data
                     this.questions = data.questions
+
+                    const quiz = this.quizzesStore.getQuizState(this.userStore.user.id, this.id)
+            
+
+                    if (!quiz.lastAnsweredIndex) {
+                        this.currentQuestionIndex = 0
+                    } else {
+                        this.currentQuestionIndex = quiz.lastAnsweredIndex
+                    }
+
+                    this.score = quiz.score
+
                     this.currentQuestion = this.questions[this.currentQuestionIndex]
-                    console.log(this.quiz)
+                    // console.log(this.quiz)
                 })
             } else {
                 response.json().then(json => {

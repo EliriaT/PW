@@ -3,11 +3,13 @@
     <!-- cards go here -->
 
     <div v-for="n in 20" :key="n">
-      <router-link v-for="n in quizzes" :key="n.id" :to="{ name: 'quizView', params: { id: n.id } }">
-        <Card :header="n.title" :description="'Questions ' + n.questions_count" />
+      <router-link v-for="n in quizzes" :key="n.id"
+        :to="{ name: 'quizView', params: { id: n.id } }">
+        <Card @click="addQuizToStore(n.id, n.questions_count)" :header="n.title"
+          :description="'Questions ' + n.questions_count" :quizState="getQuizState(n.id, n.questions_count)" />
       </router-link>
     </div>
-
+    <!-- //getCurrentQuestionIndex(n.id) -->
   </div>
 </template>
 
@@ -16,7 +18,7 @@ import { mapStores } from 'pinia'
 import Card from '../components/Card.vue'
 import { useErrorStore } from '../stores/ErrorStore'
 import { useUserStore } from '../stores/UserStore'
-import {useQuizzesStore} from '../stores/QuizStore'
+import { useQuizzesStore } from '../stores/QuizStore'
 
 export default {
   name: 'QuizzesView',
@@ -31,7 +33,37 @@ export default {
   },
   computed: {
 
-    ...mapStores(useErrorStore)
+    ...mapStores(useErrorStore, useUserStore, useQuizzesStore)
+
+  },
+  methods: {
+    addQuizToStore(quizId, questionsCount) {
+      this.quizzesStore.newQuiz(this.userStore.user.id, quizId, questionsCount)
+    },
+
+    getQuizState(quizId, questionsCount) {
+      if (this.quizzesStore.isQuizStarted(this.userStore.user.id, quizId)) {
+        let isFinished, score
+        [isFinished, score] = this.quizzesStore.isQuizFinished(this.userStore.user.id, quizId)
+        if (isFinished) {
+          let percentage = score / questionsCount * 100
+          percentage.toFixed(2)
+          return "Score: " + percentage.toFixed(2) + " %"
+        }
+        const quiz = this.quizzesStore.getQuizState(this.userStore.user.id, quizId)
+        return "In progress: " + (quiz.lastAnsweredIndex ) + "/10"
+      } else {
+        return "Try it!"
+      }
+    },
+    // getCurrentQuestionIndex(quizId) {
+    //   const quiz = this.quizzesStore.getQuizState(this.userStore.user.id, quizId)
+    //   console.log(quiz.lastAnsweredIndex)
+    //   if (!quiz.lastAnsweredIndex) {
+    //     return 0
+    //   }
+    //   return quiz.lastAnsweredIndex
+    // }
 
   },
   mounted() {
@@ -46,7 +78,7 @@ export default {
       if (response.ok) {
         response.json().then(data => {
           this.quizzes = data
-          console.log(data)
+          // console.log(data)
         })
       } else {
         response.json().then(json => {

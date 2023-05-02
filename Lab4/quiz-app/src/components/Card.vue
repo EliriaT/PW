@@ -6,8 +6,8 @@
     <p class="text-gray-700 text-base text-center bg-gray-200 rounded-full px-3 py-1 font-semibold w-32   flex-auto">
      {{description}}
     </p> 
-    <!-- In progress. Answered: 1/10 -->
-      <Button class="mt-4">Try it!</Button>
+    <!-- In progress. Answered: 1/10 / Try it! / Score: 80% --> 
+      <Button class="mt-4">{{quizState}}</Button>
 
   </div>
 </template>
@@ -16,7 +16,7 @@
 import Button from './Button.vue'
 
 export default {
-  props: ['header','description'],
+  props: ['header','description','quizState'],
   components: { Button },
 }
 </script>

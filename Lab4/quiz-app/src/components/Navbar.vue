@@ -87,6 +87,7 @@ import { ref } from '@vue/reactivity'
 import Button from './Button.vue'
 import { useUserStore } from '../stores/UserStore'
 import { useErrorStore } from '../stores/ErrorStore'
+import { useQuizzesStore } from '../stores/QuizStore'
 import { useRouter } from 'vue-router'
 
 export default {
@@ -95,6 +96,7 @@ export default {
     const router = useRouter()
     const userStore = useUserStore()
     const errorStore = useErrorStore()
+    const quizStore = useQuizzesStore()
 
     const isOpen = ref(false)
     let links = [
@@ -118,6 +120,7 @@ export default {
       }).then(response => {
         if (response.ok) {
           response.json().then(json => {
+            quizStore.deleteUserInformation(userStore.user.id)
             userStore.$reset()
             router.push({ name: 'register' })
 
@@ -135,7 +138,7 @@ export default {
 
     }
 
-    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore }
+    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore, quizStore }
   }
 }
 </script>
