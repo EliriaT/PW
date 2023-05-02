@@ -7,7 +7,7 @@
       :to="{ name: 'quizView', params: { id: n.id } }">
       <Card class="min-w-full min-h-full" @click="addQuizToStore(n.id, n.questions_count)" :header="n.title"
         :description="'Questions ' + n.questions_count" :quizState="getQuizStateInString(n.id, n.questions_count)"
-        :class="{ 'bg-teal-500': getQuizStateInNum(n.id, n.questions_count) == 3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count) == 2 }" />
+        :class="{ ' bg-teal-400': getQuizStateInNum(n.id, n.questions_count) == 3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count) == 2 }" />
     </router-link>
     <!-- </div> -->
     <!-- //getCurrentQuestionIndex(n.id) -->
@@ -62,11 +62,8 @@ export default {
         let isFinished, score
         [isFinished, score] = this.quizzesStore.isQuizFinished(this.userStore.user.id, quizId)
         if (isFinished) {
-          let percentage = score / questionsCount * 100
-          percentage.toFixed(2)
           return 3
         }
-
         return 2
       } else {
         return 1

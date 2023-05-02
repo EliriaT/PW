@@ -12,8 +12,8 @@
 
         <h2 v-else class="text-center text-6xl p-9 text-red-800 ">Score: <span
                 class="block text-center text-5xl p-9 text-green-800"
-                :class="{ 'text-red-600': (this.score / this.questions.length * 100) < 50 }"> {{ this.score /
-                    this.questions.length * 100 }} % </span></h2>
+                :class="{ 'text-red-600': (this.score / this.questions.length * 100) < 50 }"> {{ (this.score /
+                    this.questions.length * 100).toFixed(2) }} % </span></h2>
 
         <form v-if="currentQuestion" @submit.prevent="handleSubmit"
             class="grid sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-2 gap-10 justify-items-center pb-16 pt-10">

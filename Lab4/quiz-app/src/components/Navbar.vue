@@ -74,7 +74,7 @@
       </router-link>
 
 
-      <Button v-if="userStore.user.id">Reset Scores</Button>
+      <Button v-if="userStore.user.id" @click="resetUser">Reset Scores</Button>
       <Button v-if="userStore.user.id" @click="deleteUser">Delete account</Button>
 
     </ul>
@@ -138,7 +138,71 @@ export default {
 
     }
 
-    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore, quizStore }
+    function resetUser() {
+      const name = userStore.user.name
+      const surname = userStore.user.surname
+
+      fetch('https://late-glitter-4431.fly.dev/api/v54/users/' + userStore.user.id, {
+        method: "DELETE",
+        headers: {
+          "X-Access-Token": "a68baa0fe20a17aea823776f987a2741395d24402430e4e2296bce48f56310ac",
+        },
+      }).then(response => {
+        if (response.ok) {
+          response.json().then(json => {
+            quizStore.deleteUserInformation(userStore.user.id)
+            userStore.$reset()
+
+            const body = {
+              "data": {
+                "name": name,
+                "surname": surname
+              }
+            }
+            // after deleting a user from api and from persisted state, i reregister the user and log it in
+            fetch('https://late-glitter-4431.fly.dev/api/v54/users', {
+              method: "POST",
+              headers: {
+                "X-Access-Token": "a68baa0fe20a17aea823776f987a2741395d24402430e4e2296bce48f56310ac",
+                "Content-Type": "application/json"
+
+              },
+              body: JSON.stringify(body),
+            }).then(response => {
+              if (response.ok) {
+                response.json().then(json => {
+                  userStore.setUser(json.name, json.surname, json.id)
+                  router.push({ name: 'quizzes' })
+
+                })
+              } else {
+                response.json().then(json => {
+                  errorStore.setError(json.message)
+                })
+              }
+            }).catch(err => {
+              console.log(err.message)
+              errorStore.setError(err.message)
+            })
+
+          })
+        } else {
+          response.json().then(json => {
+            errorStore.setError(json.message)
+            console.log(json.message)
+          })
+        }
+      }).catch(err => {
+        console.log(err.message)
+        this.errorStore.setError(err.message)
+      })
+
+
+
+    }
+
+
+    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore, quizStore, resetUser }
   }
 }
 </script>
