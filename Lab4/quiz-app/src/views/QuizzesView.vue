@@ -3,12 +3,12 @@
     <!-- cards go here -->
 
     <!-- <div v-for="n in 20" :key="n"> -->
-      <router-link class="min-w-full min-h-full" v-for="n in quizzes" :key="n.id"
-        :to="{ name: 'quizView', params: { id: n.id } }">
-        <Card class="min-w-full min-h-full" @click="addQuizToStore(n.id, n.questions_count)" :header="n.title"
-          :description="'Questions ' + n.questions_count" :quizState="getQuizStateInString(n.id, n.questions_count)" 
-          :class="{'bg-teal-300' : getQuizStateInNum(n.id, n.questions_count)==3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count)==2}"/>
-      </router-link>
+    <router-link class="min-w-full min-h-full" v-for="n in quizzes" :key="n.id"
+      :to="{ name: 'quizView', params: { id: n.id } }">
+      <Card class="min-w-full min-h-full" @click="addQuizToStore(n.id, n.questions_count)" :header="n.title"
+        :description="'Questions ' + n.questions_count" :quizState="getQuizStateInString(n.id, n.questions_count)"
+        :class="{ 'bg-teal-500': getQuizStateInNum(n.id, n.questions_count) == 3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count) == 2 }" />
+    </router-link>
     <!-- </div> -->
     <!-- //getCurrentQuestionIndex(n.id) -->
   </div>
@@ -52,12 +52,12 @@ export default {
           return "Score: " + percentage.toFixed(2) + " %"
         }
         const quiz = this.quizzesStore.getQuizState(this.userStore.user.id, quizId)
-        return "In progress: " + (quiz.lastAnsweredIndex ) + "/10"
+        return "In progress: " + (quiz.lastAnsweredIndex) + "/10"
       } else {
         return "Try it!"
       }
     },
-    getQuizStateInNum(quizId, questionsCount){
+    getQuizStateInNum(quizId, questionsCount) {
       if (this.quizzesStore.isQuizStarted(this.userStore.user.id, quizId)) {
         let isFinished, score
         [isFinished, score] = this.quizzesStore.isQuizFinished(this.userStore.user.id, quizId)
@@ -66,11 +66,40 @@ export default {
           percentage.toFixed(2)
           return 3
         }
-        const quiz = this.quizzesStore.getQuizState(this.userStore.user.id, quizId)
+
         return 2
       } else {
         return 1
       }
+    },
+    sortQuizzes() {
+      console.log("started")
+      const finishedQuizzes = this.quizzes.filter((q) => {
+        let isFinished, score
+        [isFinished, score] = this.quizzesStore.isQuizFinished(this.userStore.user.id, q.id)
+
+        return isFinished
+      })
+
+      const startedQuizzes = this.quizzes.filter(q => {
+        let isFinished, score
+        [isFinished, score] = this.quizzesStore.isQuizFinished(this.userStore.user.id, q.id)
+        return this.quizzesStore.isQuizStarted(this.userStore.user.id, q.id) && !isFinished
+      })
+
+      const otherQuizzes = this.quizzes.filter(q => {
+        let isFinished, score
+        let isStarted
+    
+        [isFinished, score] = this.quizzesStore.isQuizFinished(this.userStore.user.id, q.id)
+
+        if (isFinished == false && this.quizzesStore.isQuizStarted(this.userStore.user.id, q.id) == false){
+          return true
+        }
+        return false
+      })
+
+      this.quizzes = finishedQuizzes.concat(startedQuizzes,otherQuizzes)
     }
 
   },
@@ -86,6 +115,7 @@ export default {
       if (response.ok) {
         response.json().then(data => {
           this.quizzes = data
+          this.sortQuizzes()
           // console.log(data)
         })
       } else {
