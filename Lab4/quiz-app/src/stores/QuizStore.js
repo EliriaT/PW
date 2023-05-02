@@ -11,7 +11,7 @@ export const useQuizzesStore = defineStore('quizzes', {
                 quizId: 0,
                 questionsCount: 0,
                 lastAnsweredIndex: 0,
-                score: -1 //-1 means that the quiz is not finished
+                score: 0 
             }]
         }]
     }),
@@ -52,7 +52,10 @@ export const useQuizzesStore = defineStore('quizzes', {
                 if (quiz.length == 0) {
                     return false
                 }
-                return true
+                if(quiz[0].lastAnsweredIndex>0){
+                    return true
+                }
+                return false
             }
 
 
@@ -81,16 +84,7 @@ export const useQuizzesStore = defineStore('quizzes', {
         // this will mark a quiz as started for a user
         newQuiz(userId, quizId, questionsCount) {
             let allUserResults = this.getUserResults(userId)
-            // if (allUserResults == undefined) {
-            //     this.allResults.push({
-            //         userId: userId,
-            //         userResults: []
-            //     }) 
-            //     allUserResults = this.getUserResults(userId)
 
-            // }
-            // Is it passed by reference??? to do: test it
-            // because if not, I ought to substitute the allUserResults of that user in allResults
 
             let quiz = this.getQuizState(userId, quizId)
             if (!quiz.quizId){
@@ -98,7 +92,7 @@ export const useQuizzesStore = defineStore('quizzes', {
                     quizId: quizId,
                     questionsCount: questionsCount,
                     lastAnsweredIndex: 0,
-                    score: -1
+                    score: 0
                 })
             }
                
