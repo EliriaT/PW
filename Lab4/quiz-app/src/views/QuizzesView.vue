@@ -15,6 +15,8 @@
 import { mapStores } from 'pinia'
 import Card from '../components/Card.vue'
 import { useErrorStore } from '../stores/ErrorStore'
+import { useUserStore } from '../stores/UserStore'
+import {useQuizzesStore} from '../stores/QuizStore'
 
 export default {
   name: 'QuizzesView',
@@ -53,6 +55,9 @@ export default {
 
         })
       }
+    }).catch(err => {
+      console.log(err.message)
+      this.errorStore.setError(err.message)
     })
 
 

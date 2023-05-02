@@ -1,5 +1,6 @@
 import { defineStore } from "pinia"
 
+// used to store the currently logged in user
 export const useUserStore = defineStore('user', {
     state: () => ({
         user: {

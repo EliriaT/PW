@@ -5,15 +5,19 @@
     <div class="font-bold text-xl mb-2 text-center  flex-auto">{{header}}</div>
     <p class="text-gray-700 text-base text-center bg-gray-200 rounded-full px-3 py-1 font-semibold w-32   flex-auto">
      {{description}}
-    </p>
-
+    </p> 
+    <!-- In progress. Answered: 1/10 -->
+      <Button class="mt-4">Try it!</Button>
 
   </div>
 </template>
 
 <script>
+import Button from './Button.vue'
+
 export default {
   props: ['header','description'],
+  components: { Button },
 }
 </script>
 

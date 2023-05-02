@@ -1,5 +1,5 @@
 <template>
-  <div  class="bg-gray-900 text-gray-100 py-3.5 px-6 shadow-md  md:flex justify-between items-center">
+  <div class="bg-gray-900 text-gray-100 py-3.5 px-6 shadow-md  md:flex justify-between items-center">
 
     <router-link :to="{ name: 'quizzes' }">
       <div class="flex items-center cursor-pointer">
@@ -109,30 +109,33 @@ export default {
     }
 
     function deleteUser() {
-    
-      fetch('https://late-glitter-4431.fly.dev/api/v54/users/' + userStore.user.id, {
-          method: "DELETE",
-          headers: {
-            "X-Access-Token": "a68baa0fe20a17aea823776f987a2741395d24402430e4e2296bce48f56310ac",
-          },
-        }).then(response => {
-          if (response.ok) {
-            response.json().then(json => {
-              userStore.$reset()
-              router.push({ name: 'register' })
 
-            })
-          } else {
-            response.json().then(json => {
-              errorStore.setError(json.message)
-              console.log(json.message)
-            })
-          }
-        })
+      fetch('https://late-glitter-4431.fly.dev/api/v54/users/' + userStore.user.id, {
+        method: "DELETE",
+        headers: {
+          "X-Access-Token": "a68baa0fe20a17aea823776f987a2741395d24402430e4e2296bce48f56310ac",
+        },
+      }).then(response => {
+        if (response.ok) {
+          response.json().then(json => {
+            userStore.$reset()
+            router.push({ name: 'register' })
+
+          })
+        } else {
+          response.json().then(json => {
+            errorStore.setError(json.message)
+            console.log(json.message)
+          })
+        }
+      }).catch(err => {
+        console.log(err.message)
+        this.errorStore.setError(err.message)
+      })
 
     }
 
-    return { links, isOpen, toggleMenu, userStore, deleteUser,errorStore }
+    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore }
   }
 }
 </script>

@@ -2,8 +2,6 @@
     <div class="pt-14 overflow-auto md:px-36 flex flex-col px-10  items-center ">
         <h1 class="text-5xl font-bold text-center text-red-900 ">{{ quiz.title }}</h1>
 
-
-
         <div v-if="currentQuestion" class="text-gray-600 font-semibold md:text-2xl text-lgtext-center py-4">
             Currently at question {{ currentQuestionIndex + 1 }} of {{ questions.length }}
         </div>
@@ -48,7 +46,7 @@ export default {
             warnButton: false,
             quiz: {},
             questions: [],
-            currentQuestionIndex: 2,
+            currentQuestionIndex: 0,
             currentQuestion: {},
             selectedAnswer: '',
             body: {},
@@ -134,6 +132,9 @@ export default {
 
                     })
                 }
+            }).catch(err => {
+                console.log(err.message)
+                this.errorStore.setError(err.message)
             })
         },
         // TODO I should go next question only if there are no errors from fetch()
@@ -169,6 +170,9 @@ export default {
 
                 })
             }
+        }).catch(err => {
+            console.log(err.message)
+            this.errorStore.setError(err.message)
         })
 
     }
@@ -203,4 +207,5 @@ export default {
     60% {
         transform: translate3d(4px, 0, 0);
     }
-}</style>
+}
+</style>

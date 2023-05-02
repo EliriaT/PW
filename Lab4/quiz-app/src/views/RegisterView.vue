@@ -116,6 +116,9 @@ export default {
               this.errorStore.setError(json.message)
             })
           }
+        }).catch(err => {
+          console.log(err.message)
+          this.errorStore.setError(err.message)
         })
 
       }
