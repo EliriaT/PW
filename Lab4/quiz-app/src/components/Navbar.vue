@@ -2,10 +2,10 @@
   <div class="bg-gray-900 text-gray-100 py-3.5 px-6 shadow-md  md:flex justify-between items-center">
 
     <router-link :to="{ name: 'quizzes' }">
-      <div class="flex items-center cursor-pointer">
+      <div class="flex items-center cursor-pointer" @click="playSound">
 
 
-        <span class="text-green-500 text-xl mr-1 hover:text-white">
+        <span class="text-green-500 text-xl mr-1 hover:text-white" @click="playSound">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
             class="w-6 h-6">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -39,35 +39,35 @@
       :class="[isOpen ? 'left-0' : 'left-[-100%]']">
 
       <router-link :to="{ name: 'quizzes' }">
-        <li class="md:mx-4 md:my-0 my-4">
+        <li class="md:mx-4 md:my-0 my-4" @click="playSound">
 
           <a href="quizzes" class="text-xl hover:text-green-500">Quizzes</a>
         </li>
       </router-link>
 
       <router-link :to="{ name: 'login' }" v-if="!userStore.user.id">
-        <li class="md:mx-4 md:my-0 my-4">
+        <li class="md:mx-4 md:my-0 my-4" @click="playSound">
 
           <a href="register" class="text-xl hover:text-green-500">Login</a>
         </li>
       </router-link>
 
       <router-link :to="{ name: 'register' }" v-if="!userStore.user.id">
-        <li class="md:mx-4 md:my-0 my-4">
+        <li class="md:mx-4 md:my-0 my-4" @click="playSound">
 
           <a href="register" class="text-xl hover:text-green-500">Register</a>
         </li>
       </router-link>
 
       <router-link :to="{ name: 'quizzes' }" v-else>
-        <li class="md:mx-4 md:my-0 my-4">
+        <li class="md:mx-4 md:my-0 my-4" @click="playSound">
 
           <a href="quizzes" class="text-xl hover:text-green-500">{{ "Hi " + userStore.getName + "!" }}</a>
         </li>
       </router-link>
 
       <router-link v-if="userStore.user.id" :to="{ name: 'logout' }">
-        <li class="md:mx-4 md:my-0 my-4" @click="userStore.$reset">
+        <li class="md:mx-4 md:my-0 my-4" @click="singOut">
 
           <a href="logout" class="text-xl hover:text-green-500">Sign Out</a>
         </li>
@@ -76,6 +76,9 @@
 
       <Button v-if="userStore.user.id" @click="resetUser">Reset Scores</Button>
       <Button v-if="userStore.user.id" @click="deleteUser">Delete account</Button>
+      <Button class="bg-green-500 hover:bg-green-600" @click="toggleMusic">
+        {{ isMusicOn ? 'Pause music' : 'Play music' }}
+      </Button>
 
     </ul>
 
@@ -89,16 +92,34 @@ import { useUserStore } from '../stores/UserStore'
 import { useErrorStore } from '../stores/ErrorStore'
 import { useQuizzesStore } from '../stores/QuizStore'
 import { useRouter } from 'vue-router'
+import clickSound from '../audio/button.mp3'
+import firstMusic from '../audio/music/1.mp3'
+import secondMusic from '../audio/music/2.mp3'
+import thirdMusic from '../audio/music/3.mp3'
+import fourthMusic from '../audio/music/4.mp3'
+import { onUnmounted } from 'vue'
 
 export default {
   components: { Button },
   setup() {
+    // random number 0 .. 3
+    const randomSong = Math.floor(Math.random() * 4) ;
+    const songs = [firstMusic,secondMusic,thirdMusic,fourthMusic]
+
+    // the song is random! ^^
+    const backgroundMusic = new Audio(songs[randomSong])
+
+    // I think I love vue js
+    backgroundMusic.play()
+
     const router = useRouter()
     const userStore = useUserStore()
     const errorStore = useErrorStore()
     const quizStore = useQuizzesStore()
 
     const isOpen = ref(false)
+    const isMusicOn = ref(true)
+
     let links = [
       { name: "Quizzes", link: "quizzes" },
       { name: "Register", link: "register" },
@@ -106,12 +127,38 @@ export default {
 
     ]
 
+    function toggleMusic() {
+      if (isMusicOn.value) {
+        isMusicOn.value = !isMusicOn.value
+        backgroundMusic.pause()
+      } else {
+        isMusicOn.value = !isMusicOn.value
+        backgroundMusic.play()
+      }
+
+    }
+
+    // it's important to stop music on pause
+    onUnmounted(() => backgroundMusic.pause())
+
+    function playSound() {
+      const audio = new Audio(clickSound)
+      audio.play()
+    }
+
     function toggleMenu() {
+      playSound()
       isOpen.value = !isOpen.value
     }
 
-    function deleteUser() {
+    function singOut() {
+      this.playSound()
+      userStore.$reset()
 
+    }
+
+    function deleteUser() {
+      playSound()
       fetch('https://late-glitter-4431.fly.dev/api/v54/users/' + userStore.user.id, {
         method: "DELETE",
         headers: {
@@ -139,6 +186,7 @@ export default {
     }
 
     function resetUser() {
+      playSound()
       const name = userStore.user.name
       const surname = userStore.user.surname
 
@@ -202,7 +250,7 @@ export default {
     }
 
 
-    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore, quizStore, resetUser }
+    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore, quizStore, resetUser, playSound, singOut, toggleMusic, isMusicOn }
   }
 }
 </script>

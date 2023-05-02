@@ -41,6 +41,7 @@
 
 import { useUserStore } from '../stores/UserStore'
 import { useErrorStore } from '../stores/ErrorStore'
+import clickSound from '../audio/button.mp3'
 
 export default {
   components: {
@@ -73,7 +74,12 @@ export default {
     }
   },
   methods: {
+     playSound() {
+      const audio = new Audio(clickSound)
+      audio.play()
+    },
     handleSubmit() {
+      this.playSound()
       // this.error = []
       // this.name.length > 2 ?
       //   [] : this.error.push('Name must be at least 3 characters long')
@@ -81,9 +87,9 @@ export default {
 
       // this.surname.length > 2 ?
       //   this.error : this.error.push('Surname must be at least 3 characters long')
+      // this.playSound()
 
-
-      if (this.error.length == 0) {
+      if (this.error.length == 0 &&  this.surname!='' &&  this.name!='') {
         this.body = {
           "data": {
             "name": this.name,

@@ -5,9 +5,9 @@
     <!-- <div v-for="n in 20" :key="n"> -->
     <router-link class="min-w-full min-h-full" v-for="n in quizzes" :key="n.id"
       :to="{ name: 'quizView', params: { id: n.id } }">
-      <Card class="min-w-full min-h-full" @click="addQuizToStore(n.id, n.questions_count)" :header="n.title"
+      <Card  class="min-w-full min-h-full" @click="addQuizToStore(n.id, n.questions_count)" :header="n.title"
         :description="'Questions ' + n.questions_count" :quizState="getQuizStateInString(n.id, n.questions_count)"
-        :class="{ ' bg-teal-400': getQuizStateInNum(n.id, n.questions_count) == 3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count) == 2 }" />
+        :class="{ ' bg-teal-400': getQuizStateInNum(n.id, n.questions_count) == 3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count) == 2 }"  />
     </router-link>
     <!-- </div> -->
     <!-- //getCurrentQuestionIndex(n.id) -->
@@ -20,6 +20,7 @@ import Card from '../components/Card.vue'
 import { useErrorStore } from '../stores/ErrorStore'
 import { useUserStore } from '../stores/UserStore'
 import { useQuizzesStore } from '../stores/QuizStore'
+import clickSound from '../audio/button.mp3'
 
 export default {
   name: 'QuizzesView',
@@ -38,7 +39,12 @@ export default {
 
   },
   methods: {
+    playSound() {
+      const audio = new Audio(clickSound)
+      audio.play()
+    },
     addQuizToStore(quizId, questionsCount) {
+      this.playSound()
       this.quizzesStore.newQuiz(this.userStore.user.id, quizId, questionsCount)
     },
 

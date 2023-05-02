@@ -42,6 +42,7 @@
 
 import { useUserStore } from '../stores/UserStore'
 import { useErrorStore } from '../stores/ErrorStore'
+import clickSound from '../audio/button.mp3'
 
 export default {
     components: {
@@ -98,13 +99,18 @@ export default {
         })
     },
     methods: {
-
+        playSound() {
+            const audio = new Audio(clickSound)
+            audio.play()
+        },
         handleSubmit() {
-            if (this.error.length == 0) {
+            this.playSound()
+            if (this.error.length == 0 &&  this.surname!='' &&  this.name!='') {
                 this.loggedUser = this.users.filter(user => user.name == this.name && user.surname == this.surname)
                 if (this.loggedUser.length == 0) {
                     this.error.push('No such user!')
                 } else {
+                   
                     this.loggedUser = this.loggedUser[0]
                     this.userStore.setUser(this.loggedUser.name, this.loggedUser.surname, this.loggedUser.id)
                     this.name = ''

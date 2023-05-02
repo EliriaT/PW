@@ -38,6 +38,9 @@ import { mapStores } from 'pinia'
 import { useUserStore } from '../stores/UserStore'
 import { useErrorStore } from '../stores/ErrorStore'
 import { useQuizzesStore } from '../stores/QuizStore'
+import clickAns from '../audio/cartoon-jump.mp3'
+import notSelectedAns from '../audio/error.mp3'
+import nextQuestion from '../audio/game-complete.mp3'
 
 export default {
     props: ['id'],
@@ -64,6 +67,8 @@ export default {
     },
     methods: {
         warnSelectAnswer() {
+            const audio = new Audio(notSelectedAns)
+            audio.play()
             this.warnButton = true
             setTimeout(() => {
                 this.warnButton = false
@@ -71,9 +76,12 @@ export default {
         }
         ,
         nextQuestion() {
+
             if (this.selectedAnswer == '') {
                 this.warnSelectAnswer()
             } else {
+                const audio = new Audio(nextQuestion)
+                audio.play()
                 this.constructRequestBody()
                 this.submitAnswer()
                 this.resetData()
@@ -81,6 +89,8 @@ export default {
             }
         },
         handleClick(e) {
+            const audio = new Audio(clickAns)
+            audio.play()
             if (this.selectedAnswer == e.target.__vnode.key) {
                 this.selectedAnswer = ''
             } else {
