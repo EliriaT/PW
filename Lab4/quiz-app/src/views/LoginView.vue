@@ -78,7 +78,7 @@ export default {
         fetch('https://late-glitter-4431.fly.dev/api/v54/users', {
             method: "GET",
             headers: {
-                "X-Access-Token": "a68baa0fe20a17aea823776f987a2741395d24402430e4e2296bce48f56310ac",
+                "X-Access-Token": process.env.VUE_APP_API_KEY,
 
             },
         }).then(response => {

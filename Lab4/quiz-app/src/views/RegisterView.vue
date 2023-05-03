@@ -74,7 +74,7 @@ export default {
     }
   },
   methods: {
-     playSound() {
+    playSound() {
       const audio = new Audio(clickSound)
       audio.play()
     },
@@ -89,7 +89,7 @@ export default {
       //   this.error : this.error.push('Surname must be at least 3 characters long')
       // this.playSound()
 
-      if (this.error.length == 0 &&  this.surname!='' &&  this.name!='') {
+      if (this.error.length == 0 && this.surname != '' && this.name != '') {
         this.body = {
           "data": {
             "name": this.name,
@@ -100,7 +100,7 @@ export default {
         fetch('https://late-glitter-4431.fly.dev/api/v54/users', {
           method: "POST",
           headers: {
-            "X-Access-Token": "a68baa0fe20a17aea823776f987a2741395d24402430e4e2296bce48f56310ac",
+            "X-Access-Token": process.env.VUE_APP_API_KEY,
             "Content-Type": "application/json"
 
           },

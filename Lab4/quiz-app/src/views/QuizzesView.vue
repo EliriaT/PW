@@ -5,9 +5,9 @@
     <!-- <div v-for="n in 20" :key="n"> -->
     <router-link class="min-w-full min-h-full" v-for="n in quizzes" :key="n.id"
       :to="{ name: 'quizView', params: { id: n.id } }">
-      <Card  class="min-w-full min-h-full" @click="addQuizToStore(n.id, n.questions_count)" :header="n.title"
+      <Card class="min-w-full min-h-full" @click="addQuizToStore(n.id, n.questions_count)" :header="n.title"
         :description="'Questions ' + n.questions_count" :quizState="getQuizStateInString(n.id, n.questions_count)"
-        :class="{ ' bg-teal-400': getQuizStateInNum(n.id, n.questions_count) == 3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count) == 2 }"  />
+        :class="{ 'bg-teal-400': getQuizStateInNum(n.id, n.questions_count) == 3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count) == 2 }" />
     </router-link>
     <!-- </div> -->
     <!-- //getCurrentQuestionIndex(n.id) -->
@@ -29,7 +29,8 @@ export default {
   },
   data() {
     return {
-      quizzes: []
+      quizzes: [],
+      // VUE_APP_API_KEY: process.env.VUE_APP_API_KEY
     }
 
   },
@@ -76,7 +77,7 @@ export default {
       }
     },
     sortQuizzes() {
-      console.log("started")
+      // console.log("started")
       const finishedQuizzes = this.quizzes.filter((q) => {
         let isFinished, score
         [isFinished, score] = this.quizzesStore.isQuizFinished(this.userStore.user.id, q.id)
@@ -93,24 +94,25 @@ export default {
       const otherQuizzes = this.quizzes.filter(q => {
         let isFinished, score
         let isStarted
-    
+
         [isFinished, score] = this.quizzesStore.isQuizFinished(this.userStore.user.id, q.id)
 
-        if (isFinished == false && this.quizzesStore.isQuizStarted(this.userStore.user.id, q.id) == false){
+        if (isFinished == false && this.quizzesStore.isQuizStarted(this.userStore.user.id, q.id) == false) {
           return true
         }
         return false
       })
 
-      this.quizzes = finishedQuizzes.concat(startedQuizzes,otherQuizzes)
+      this.quizzes = finishedQuizzes.concat(startedQuizzes, otherQuizzes)
     }
 
   },
   mounted() {
+    console.log(process.env.VUE_APP_API_KEY)
     fetch('https://late-glitter-4431.fly.dev/api/v54/quizzes', {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       headers: {
-        "X-Access-Token": "a68baa0fe20a17aea823776f987a2741395d24402430e4e2296bce48f56310ac"
+        "X-Access-Token": process.env.VUE_APP_API_KEY
 
       },
 
