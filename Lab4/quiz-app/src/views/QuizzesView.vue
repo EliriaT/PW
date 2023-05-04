@@ -9,7 +9,7 @@
       <!-- :class="{ 'bg-teal-400': getQuizStateInNum(n.id, n.questions_count) == 3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count) == 2 }"  -->
       <Card class="min-w-full min-h-full" @click="addQuizToStore(n.id, n.questions_count)" :header="n.title"
         :description="'Questions ' + n.questions_count" :quizState="getQuizStateInString(n.id, n.questions_count)"
-        :class="{ 'bg-teal-600': getQuizStateInNum(n.id, n.questions_count) == 3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count) == 2 }"
+        :class="{ 'bg-emerald-500': getQuizStateInNum(n.id, n.questions_count) == 3, 'bg-yellow-200': getQuizStateInNum(n.id, n.questions_count) == 2 }"
        
       />
     </router-link>
@@ -144,4 +144,8 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+.someStrangeBug{
+  background-color: red;
+}
+</style>

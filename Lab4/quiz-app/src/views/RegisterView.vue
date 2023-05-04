@@ -1,4 +1,5 @@
 <template>
+  <h1 class="font-bold text-5xl p-8 text-center mt-28 text-emerald-900">Register!</h1>
   <div class=" w-1/4 absolute  bg-green-100 top-1/3 left-1/3 ml-24 ">
     <form class="bg-white shadow-md rounded px-8 pt-6 pb-8 " @submit.prevent="handleSubmit">
 
