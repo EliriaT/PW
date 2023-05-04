@@ -1,6 +1,6 @@
 <template>
   <div @scroll="handleScroll" class="bg-green-100 h-screen w-screen overflow-auto pb-4 ">
-    <Navbar :key="isOpen" />
+    <Navbar :key="isOpen" @toggle-music="toggleMusic" @change-song="changeSong" :isMusicOn="isMusicOn" />
     <Teleport to="body">
       <!-- use the modal component, pass in the prop -->
       <modal>
@@ -21,23 +21,24 @@ import Navbar from "./components/Navbar.vue"
 import Modal from "./components/Modal.vue"
 import { mapStores } from 'pinia'
 import { useErrorStore } from './stores/ErrorStore'
-import {useApiStore} from './stores/ApiStore'
+import { useApiStore } from './stores/ApiStore'
+import { useMusicStore } from './stores/MusicStore'
+
 import { computed } from 'vue'
+
 
 export default {
   name: 'Quiz-App',
   data() {
     return {
       isOpen: false,
-      // the problem is that on mount the app reads the old api key
-      // should be red from the file
-      // updated in file if invalid token error
-      // thus updated on demand
+      isMusicOn: true,
+      currentSong: '',
 
     }
   },
   computed: {
-    ...mapStores(useErrorStore,useApiStore)
+    ...mapStores(useErrorStore, useApiStore, useMusicStore)
   },
   components: {
     Navbar, Modal
@@ -51,11 +52,11 @@ export default {
   watch: {
     errorStore: {
       handler(newValue, oldValue) {
-        console.log("Old Api Key: ",this.apiKeyStore.apiKey)
+        console.log("Old Api Key: ", this.apiKeyStore.apiKey)
 
         if (newValue.error.message == "Unauthorized. X-Access-Token is missing or is invalid.") {
           this.fetchNewApiKey()
-         
+
         }
       },
       deep: true
@@ -71,10 +72,23 @@ export default {
       }
 
     },
+    toggleMusic() {
+      if (this.isMusicOn) {
+        this.isMusicOn = !this.isMusicOn
+        this.currentSong.pause()
+      } else {
+        this.isMusicOn = !this.isMusicOn
+        this.currentSong.play()
+      }
+    },
+    changeSong() {
+    
+      this.currentSong.pause()
+      this.musicStore.changeMusicIndex()
+      this.currentSong = this.musicStore.changeSong
 
-    htmlDecode(input) {
-      var doc = new DOMParser().parseFromString(input, "text/html");
-      return doc.documentElement.textContent;
+      this.currentSong.play()
+
     },
     fetchNewApiKey() {
       // https://late-glitter-4431.fly.dev/api/developers/v72/tokens
@@ -89,7 +103,7 @@ export default {
         if (response.ok) {
           response.json().then(json => {
 
-            this.apiKeyStore.setApiKey( json.token)
+            this.apiKeyStore.setApiKey(json.token)
             console.log("New Api Key: ", this.apiKeyStore.apiKey)
 
           })
@@ -170,33 +184,13 @@ export default {
     }
   },
   mounted() {
-    // this.populateQuizzes()
+    this.currentSong = this.musicStore.getCurrentSong
+    this.currentSong.play()
 
-    // the first key is actually already expired and invalided
-    // after build the key will be updated using the other 2 secret keys from the .env file. In such way noone actually might have direct access to the api key
-    // and I can still update the apiKey on expiration
-
-    // no, unfortunately I can not work with local files in vue js in a right way
-
-    // fetch('/apiKey.enc').then(response => {
-    //     if (response.ok) {
-    //       response.json().then(json => {
-    //         this.API_KEY = json.apiKey
-    //       console.log(json.apiKey)
-
-    //       })
-    //     } else {
-    //       response.json().then(json => {
-    //         errorStore.setError(json.message)
-    //         console.log(json.message)
-    //       })
-    //     }
-    //   }).catch(err => {
-    //     console.log(err.message)
-    //     this.errorStore.setError(err.message)
-    //   })
-
-
+  },
+  // it's important to stop music on pause
+  unmounted() {
+    this.currentSong.pause()
   }
 }
 </script>

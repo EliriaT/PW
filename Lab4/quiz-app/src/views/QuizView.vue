@@ -8,9 +8,9 @@
 
         <h2 v-if="currentQuestion"
             class="text-center font-bold xl:text-4xl xl:px-40 xl:leading-normal  lg:text-3xl lg:leading-normal lg:px-2 md:text-2xl md:leading-normal md:px-2  sm:text-2xl sm:leading-normal sm:px-2 text-xl py-10  px-2 ">
-            {{ currentQuestion.question }}</h2>
+            {{ htmlDecode(currentQuestion.question)  }}</h2>
 
-        <h2 v-else class="text-center text-6xl p-9 text-red-800 ">Score: <span
+        <h2 v-else class="text-center text-6xl p-9 text-red-800 mt-36">Score: <span
                 class="block text-center text-5xl p-9 text-green-800"
                 :class="{ 'text-red-600': (this.score / this.questions.length * 100) < 50 }"> {{ (this.score /
                     this.questions.length * 100).toFixed(2) }} % </span></h2>
@@ -22,7 +22,7 @@
                 v-for="answer in currentQuestion.answers" :key="answer"
                 :class="{ 'bg-yellow-100 border-8 border-yellow-300  ': selectedAnswer == answer, 'shake border-red-400 bg-red-50': warnButton }"
                 @click="handleClick">
-                {{ answer }}
+                {{ htmlDecode(answer) }}
             </button>
         </form>
         <button v-if="currentQuestion" @click="nextQuestion"
@@ -75,8 +75,7 @@ export default {
             setTimeout(() => {
                 this.warnButton = false
             }, 1500)
-        }
-        ,
+        },
         nextQuestion() {
 
             if (this.selectedAnswer == '') {
@@ -154,12 +153,15 @@ export default {
             this.currentQuestion = this.questions[this.currentQuestionIndex]
             this.selectedAnswer = ''
 
-        }
+        },
+        htmlDecode(input) {
+            var doc = new DOMParser().parseFromString(input, "text/html");
+            return doc.documentElement.textContent;
+        },
 
     },
 
     mounted() {
-        console.log( this.apiKey )
         fetch('https://late-glitter-4431.fly.dev/api/v54/quizzes/' + this.id, {
             method: "GET", // *GET, POST, PUT, DELETE, etc.
             headers: {
@@ -192,7 +194,7 @@ export default {
                     console.log(json)
                     this.error = json.message
                     this.errorStore.setError(json.message)
-                    console.log( this.apiKey )
+                    console.log(this.apiKey)
                 })
             }
         }).catch(err => {

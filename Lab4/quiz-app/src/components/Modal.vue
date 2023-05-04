@@ -24,14 +24,12 @@ import { mapStores } from 'pinia'
 import { useErrorStore } from '../stores/ErrorStore'
 
 export default {
-  props: {
-    show: Boolean
-  },
+
   computed: {
     ...mapStores(useErrorStore)
   },
-  methods:{
-    updatePage(){
+  methods: {
+    updatePage() {
       this.errorStore.$reset()
       this.$router.go(0)
     }

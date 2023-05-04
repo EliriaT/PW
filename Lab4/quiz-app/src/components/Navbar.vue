@@ -76,10 +76,10 @@
 
       <Button v-if="userStore.user.id" @click="resetUser">Reset Scores</Button>
       <Button v-if="userStore.user.id" @click="deleteUser">Delete account</Button>
-      <Button class="bg-green-500 hover:bg-green-600" @click="toggleMusic">
+      <Button class="bg-green-500 hover:bg-green-600" @click="$emit('toggleMusic')">
         {{ isMusicOn ? 'Pause music' : 'Play music' }}
       </Button>
-      <Button class="bg-green-500 hover:bg-green-600" @click="changeMusic">
+      <Button class="bg-green-500 hover:bg-green-600" @click="$emit('changeSong')">
         Change Song
       </Button>
 
@@ -96,28 +96,16 @@ import { useErrorStore } from '../stores/ErrorStore'
 import { useQuizzesStore } from '../stores/QuizStore'
 import { useRouter } from 'vue-router'
 import clickSound from '../audio/button.mp3'
-import firstMusic from '../audio/music/1.mp3'
-import secondMusic from '../audio/music/2.mp3'
-import thirdMusic from '../audio/music/3.mp3'
-import fourthMusic from '../audio/music/4.mp3'
-import { onUnmounted } from 'vue'
+
+// import { onUnmounted } from 'vue'
 import { inject } from 'vue'
 
 export default {
   components: { Button },
-
+  props: ['isMusicOn'],
   setup() {
     const apiKey = inject('apiKey')
 
-    // random number 0 .. 3
-    let randomSong = Math.floor(Math.random() * 4)
-    const songs = [firstMusic, secondMusic, thirdMusic, fourthMusic]
-
-    // the song is random! ^^
-    let backgroundMusic = new Audio(songs[randomSong])
-
-    // I think I love vue js
-    backgroundMusic.play()
 
     const router = useRouter()
     const userStore = useUserStore()
@@ -125,7 +113,7 @@ export default {
     const quizStore = useQuizzesStore()
 
     const isOpen = ref(false)
-    const isMusicOn = ref(true)
+
 
     let links = [
       { name: "Quizzes", link: "quizzes" },
@@ -133,28 +121,6 @@ export default {
       { name: "Log out", link: "logout" },
 
     ]
-
-    function changeMusic() {
-      backgroundMusic.pause()
-      randomSong = randomSong == 3 ? 0 : randomSong + 1
-      console.log(randomSong)
-      backgroundMusic = new Audio(songs[randomSong])
-      backgroundMusic.play()
-    }
-
-    function toggleMusic() {
-      if (isMusicOn.value) {
-        isMusicOn.value = !isMusicOn.value
-        backgroundMusic.pause()
-      } else {
-        isMusicOn.value = !isMusicOn.value
-        backgroundMusic.play()
-      }
-
-    }
-
-    // it's important to stop music on pause
-    onUnmounted(() => backgroundMusic.pause())
 
     function playSound() {
       const audio = new Audio(clickSound)
@@ -173,11 +139,12 @@ export default {
     }
 
     function deleteUser() {
+      console.log(apiKey)
       playSound()
       fetch('https://late-glitter-4431.fly.dev/api/v54/users/' + userStore.user.id, {
         method: "DELETE",
         headers: {
-          "X-Access-Token": apiKey,
+          "X-Access-Token": apiKey.value,
         },
       }).then(response => {
         if (response.ok) {
@@ -208,7 +175,7 @@ export default {
       fetch('https://late-glitter-4431.fly.dev/api/v54/users/' + userStore.user.id, {
         method: "DELETE",
         headers: {
-          "X-Access-Token": this.apiKey,
+          "X-Access-Token": apiKey.value,
         },
       }).then(response => {
         if (response.ok) {
@@ -226,7 +193,7 @@ export default {
             fetch('https://late-glitter-4431.fly.dev/api/v54/users', {
               method: "POST",
               headers: {
-                "X-Access-Token": this.apiKey,
+                "X-Access-Token": apiKey.value,
                 "Content-Type": "application/json"
 
               },
@@ -265,7 +232,7 @@ export default {
     }
 
 
-    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore, quizStore, resetUser, playSound, signOut, toggleMusic, isMusicOn, changeMusic }
+    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore, quizStore, resetUser, playSound, signOut }
   }
 }
 </script>
