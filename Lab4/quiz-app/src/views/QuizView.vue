@@ -60,6 +60,8 @@ export default {
 
         }
     },
+    // apiKey is provided from main app and injected in this component. Accessable on this.apiKey
+    inject: ['apiKey'],
     computed: {
         // Pinia will add by the default the "Store" suffix to the id  of each store. Thus if the id is "userStore", I can access the store by this.userStoreStore. But I changed the id to simply store.
         ...mapStores(useUserStore, useErrorStore, useQuizzesStore)
@@ -115,7 +117,7 @@ export default {
             fetch('https://late-glitter-4431.fly.dev/api/v54/quizzes/' + this.quiz.id + "/submit", {
                 method: "POST",
                 headers: {
-                    "X-Access-Token": process.env.VUE_APP_API_KEY,
+                    "X-Access-Token": this.apiKey,
                     "Content-Type": "application/json"
 
                 },
@@ -157,10 +159,11 @@ export default {
     },
 
     mounted() {
+        console.log( this.apiKey )
         fetch('https://late-glitter-4431.fly.dev/api/v54/quizzes/' + this.id, {
             method: "GET", // *GET, POST, PUT, DELETE, etc.
             headers: {
-                "X-Access-Token": process.env.VUE_APP_API_KEY
+                "X-Access-Token": this.apiKey
 
             }
         }).then(response => {
@@ -189,7 +192,7 @@ export default {
                     console.log(json)
                     this.error = json.message
                     this.errorStore.setError(json.message)
-
+                    console.log( this.apiKey )
                 })
             }
         }).catch(err => {

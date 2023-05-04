@@ -48,6 +48,7 @@ export default {
     components: {
 
     },
+    inject: ['apiKey'],
     name: 'RegisterView',
     data() {
         return {
@@ -78,7 +79,7 @@ export default {
         fetch('https://late-glitter-4431.fly.dev/api/v54/users', {
             method: "GET",
             headers: {
-                "X-Access-Token": process.env.VUE_APP_API_KEY,
+                "X-Access-Token": this.apiKey,
 
             },
         }).then(response => {

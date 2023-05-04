@@ -11,7 +11,7 @@
           <slot name="body">default body</slot>
         </div>
 
-        <Button class="bg-red-300 hover:bg-red-400 w-1/2  h-10" @click="errorStore.error.isError=false">Okay (ツ)</Button>
+        <Button class="bg-red-300 hover:bg-red-400 w-1/2  h-10" @click="updatePage">Okay (ツ)</Button>
 
       </div>
     </div>
@@ -27,8 +27,14 @@ export default {
   props: {
     show: Boolean
   },
-  computed:{
+  computed: {
     ...mapStores(useErrorStore)
+  },
+  methods:{
+    updatePage(){
+      this.errorStore.$reset()
+      this.$router.go(0)
+    }
   },
   components: { Button },
 }
@@ -58,7 +64,7 @@ export default {
   transition: all 0.3s ease;
   display: flex;
   flex-direction: column;
-    align-items: center;
+  align-items: center;
   justify-items: center;
 }
 

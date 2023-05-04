@@ -21,20 +21,45 @@ import Navbar from "./components/Navbar.vue"
 import Modal from "./components/Modal.vue"
 import { mapStores } from 'pinia'
 import { useErrorStore } from './stores/ErrorStore'
+import {useApiStore} from './stores/ApiStore'
+import { computed } from 'vue'
 
 export default {
   name: 'Quiz-App',
   data() {
     return {
       isOpen: false,
+      // the problem is that on mount the app reads the old api key
+      // should be red from the file
+      // updated in file if invalid token error
+      // thus updated on demand
 
     }
   },
   computed: {
-    ...mapStores(useErrorStore)
+    ...mapStores(useErrorStore,useApiStore)
   },
   components: {
     Navbar, Modal
+  },
+  provide() {
+    return {
+      // explicitly provide a computed property
+      apiKey: computed(() => this.apiKeyStore.apiKey)
+    }
+  },
+  watch: {
+    errorStore: {
+      handler(newValue, oldValue) {
+        console.log("Old Api Key: ",this.apiKeyStore.apiKey)
+
+        if (newValue.error.message == "Unauthorized. X-Access-Token is missing or is invalid.") {
+          this.fetchNewApiKey()
+         
+        }
+      },
+      deep: true
+    }
   },
   methods: {
 
@@ -44,12 +69,40 @@ export default {
       if (scrollTop <= 150) {
         this.isOpen = !this.isOpen
       }
-      // asfdsg sfdf
+
     },
 
     htmlDecode(input) {
       var doc = new DOMParser().parseFromString(input, "text/html");
       return doc.documentElement.textContent;
+    },
+    fetchNewApiKey() {
+      // https://late-glitter-4431.fly.dev/api/developers/v72/tokens
+      fetch('https://late-glitter-4431.fly.dev/api/developers/v72/tokens', {
+        method: "POST",
+        headers: {
+          "X-Developer-Key": process.env.VUE_APP_X_DEVELOPER_KEY,
+          "X-Developer-Secret": process.env.VUE_APP_X_DEVELOPER_SECRET,
+
+        }
+      }).then(response => {
+        if (response.ok) {
+          response.json().then(json => {
+
+            this.apiKeyStore.setApiKey( json.token)
+            console.log("New Api Key: ", this.apiKeyStore.apiKey)
+
+          })
+        } else {
+          response.json().then(json => {
+            console.log(err.message)
+            this.errorStore.setError(json.message)
+          })
+        }
+      }).catch(err => {
+        console.log(err.message)
+        this.errorStore.setError(err.message)
+      })
     },
     populateQuizzes() {
       let category = [22]
@@ -85,7 +138,7 @@ export default {
               fetch('https://late-glitter-4431.fly.dev/api/v54/quizzes', {
                 method: "POST",
                 headers: {
-                  "X-Access-Token": process.env.VUE_APP_API_KEY,
+                  "X-Access-Token": this.API_KEY,
                   "Content-Type": "application/json"
 
                 },
@@ -118,6 +171,32 @@ export default {
   },
   mounted() {
     // this.populateQuizzes()
+
+    // the first key is actually already expired and invalided
+    // after build the key will be updated using the other 2 secret keys from the .env file. In such way noone actually might have direct access to the api key
+    // and I can still update the apiKey on expiration
+
+    // no, unfortunately I can not work with local files in vue js in a right way
+
+    // fetch('/apiKey.enc').then(response => {
+    //     if (response.ok) {
+    //       response.json().then(json => {
+    //         this.API_KEY = json.apiKey
+    //       console.log(json.apiKey)
+
+    //       })
+    //     } else {
+    //       response.json().then(json => {
+    //         errorStore.setError(json.message)
+    //         console.log(json.message)
+    //       })
+    //     }
+    //   }).catch(err => {
+    //     console.log(err.message)
+    //     this.errorStore.setError(err.message)
+    //   })
+
+
   }
 }
 </script>

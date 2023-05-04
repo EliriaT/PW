@@ -27,10 +27,11 @@ export default {
   components: {
     Card
   },
+  inject: ['apiKey'],
   data() {
     return {
       quizzes: [],
-      // VUE_APP_API_KEY: process.env.VUE_APP_API_KEY
+
     }
 
   },
@@ -108,11 +109,10 @@ export default {
 
   },
   mounted() {
-    console.log(process.env.VUE_APP_API_KEY)
     fetch('https://late-glitter-4431.fly.dev/api/v54/quizzes', {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
       headers: {
-        "X-Access-Token": process.env.VUE_APP_API_KEY
+        "X-Access-Token": this.apiKey
 
       },
 

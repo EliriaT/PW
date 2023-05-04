@@ -67,7 +67,7 @@
       </router-link>
 
       <router-link v-if="userStore.user.id" :to="{ name: 'logout' }">
-        <li class="md:mx-4 md:my-0 my-4" @click="singOut">
+        <li class="md:mx-4 md:my-0 my-4" @click="signOut">
 
           <a href="logout" class="text-xl hover:text-green-500">Sign Out</a>
         </li>
@@ -78,6 +78,9 @@
       <Button v-if="userStore.user.id" @click="deleteUser">Delete account</Button>
       <Button class="bg-green-500 hover:bg-green-600" @click="toggleMusic">
         {{ isMusicOn ? 'Pause music' : 'Play music' }}
+      </Button>
+      <Button class="bg-green-500 hover:bg-green-600" @click="changeMusic">
+        Change Song
       </Button>
 
     </ul>
@@ -98,16 +101,20 @@ import secondMusic from '../audio/music/2.mp3'
 import thirdMusic from '../audio/music/3.mp3'
 import fourthMusic from '../audio/music/4.mp3'
 import { onUnmounted } from 'vue'
+import { inject } from 'vue'
 
 export default {
   components: { Button },
+
   setup() {
+    const apiKey = inject('apiKey')
+
     // random number 0 .. 3
-    const randomSong = Math.floor(Math.random() * 4) ;
-    const songs = [firstMusic,secondMusic,thirdMusic,fourthMusic]
+    let randomSong = Math.floor(Math.random() * 4)
+    const songs = [firstMusic, secondMusic, thirdMusic, fourthMusic]
 
     // the song is random! ^^
-    const backgroundMusic = new Audio(songs[randomSong])
+    let backgroundMusic = new Audio(songs[randomSong])
 
     // I think I love vue js
     backgroundMusic.play()
@@ -126,6 +133,14 @@ export default {
       { name: "Log out", link: "logout" },
 
     ]
+
+    function changeMusic() {
+      backgroundMusic.pause()
+      randomSong = randomSong == 3 ? 0 : randomSong + 1
+      console.log(randomSong)
+      backgroundMusic = new Audio(songs[randomSong])
+      backgroundMusic.play()
+    }
 
     function toggleMusic() {
       if (isMusicOn.value) {
@@ -151,7 +166,7 @@ export default {
       isOpen.value = !isOpen.value
     }
 
-    function singOut() {
+    function signOut() {
       this.playSound()
       userStore.$reset()
 
@@ -162,7 +177,7 @@ export default {
       fetch('https://late-glitter-4431.fly.dev/api/v54/users/' + userStore.user.id, {
         method: "DELETE",
         headers: {
-          "X-Access-Token": process.env.VUE_APP_API_KEY,
+          "X-Access-Token": apiKey,
         },
       }).then(response => {
         if (response.ok) {
@@ -193,7 +208,7 @@ export default {
       fetch('https://late-glitter-4431.fly.dev/api/v54/users/' + userStore.user.id, {
         method: "DELETE",
         headers: {
-          "X-Access-Token": process.env.VUE_APP_API_KEY,
+          "X-Access-Token": this.apiKey,
         },
       }).then(response => {
         if (response.ok) {
@@ -211,7 +226,7 @@ export default {
             fetch('https://late-glitter-4431.fly.dev/api/v54/users', {
               method: "POST",
               headers: {
-                "X-Access-Token": process.env.VUE_APP_API_KEY,
+                "X-Access-Token": this.apiKey,
                 "Content-Type": "application/json"
 
               },
@@ -250,7 +265,7 @@ export default {
     }
 
 
-    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore, quizStore, resetUser, playSound, singOut, toggleMusic, isMusicOn }
+    return { links, isOpen, toggleMenu, userStore, deleteUser, errorStore, quizStore, resetUser, playSound, signOut, toggleMusic, isMusicOn, changeMusic }
   }
 }
 </script>
