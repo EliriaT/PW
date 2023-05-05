@@ -1,6 +1,6 @@
 <template>
   <div @scroll="handleScroll" class="bg-green-100 h-screen w-screen overflow-auto pb-4 ">
-    <Navbar :key="isOpen" @toggle-music="toggleMusic" @change-song="changeSong" :isMusicOn="isMusicOn" />
+    <Navbar :key="isOpen" @toggle-music="toggleMusic" @change-song="changeMusic" :isMusicOn="isMusicOn" />
     <Teleport to="body">
       <!-- use the modal component, pass in the prop -->
       <modal>
