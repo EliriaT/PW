@@ -81,8 +81,16 @@ export default {
         this.currentSong.play()
       }
     },
-    
-    
+
+
+    changeMusic() {
+      this.currentSong.pause()
+      this.musicStore.changeMusicIndex()
+      this.currentSong = this.musicStore.changeSong
+      this.currentSong.play()
+
+    },
+
     fetchNewApiKey() {
       fetch('https://late-glitter-4431.fly.dev/api/developers/v72/tokens', {
         method: "POST",
