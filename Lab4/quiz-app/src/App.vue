@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       isOpen: false,
-      isMusicOn: true,
+      isMusicOn: false,
       currentSong: '',
 
     }
@@ -81,17 +81,9 @@ export default {
         this.currentSong.play()
       }
     },
-    changeSong() {
     
-      this.currentSong.pause()
-      this.musicStore.changeMusicIndex()
-      this.currentSong = this.musicStore.changeSong
-
-      this.currentSong.play()
-
-    },
+    
     fetchNewApiKey() {
-      // https://late-glitter-4431.fly.dev/api/developers/v72/tokens
       fetch('https://late-glitter-4431.fly.dev/api/developers/v72/tokens', {
         method: "POST",
         headers: {

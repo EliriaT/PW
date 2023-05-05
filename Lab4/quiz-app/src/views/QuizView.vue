@@ -1,16 +1,28 @@
 <template>
-    <div class="pt-14 overflow-auto md:px-36 flex flex-col px-10  items-center ">
-        <h1 class="text-5xl font-bold text-center text-red-900 ">{{ quiz.title }}</h1>
+    <div class="pt-14 overflow-auto md:px-36 flex flex-col px-10  items-center  ">
 
-        <div v-if="currentQuestion" class="text-gray-600 font-semibold md:text-2xl text-lgtext-center py-4">
+        <div v-if="!loaded" class="mt-28 ">
+            <h1 class="text-green-800 text-5xl">Loading...</h1>
+            <svg class="animate-spin h-36 w-36 text-green-800 ml-3 mt-6" xmlns="http://www.w3.org/2000/svg" fill="none"
+                viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <path strokeLinecap="round" strokeLinejoin="round"
+                    d="M15.182 15.182a4.5 4.5 0 01-6.364 0M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z" />
+            </svg>
+        </div>
+
+
+
+        <h1 v-if="quiz.title" class="text-5xl font-bold text-center text-red-900 ">{{ quiz.title }}</h1>
+
+        <div v-if="currentQuestion && quiz.title" class="text-gray-600 font-semibold md:text-2xl text-lgtext-center py-4">
             Currently at question {{ currentQuestionIndex + 1 }} of {{ questions.length }}
         </div>
 
-        <h2 v-if="currentQuestion"
+        <h2 v-if="currentQuestion && quiz.title"
             class="text-center font-bold xl:text-4xl xl:px-40 xl:leading-normal  lg:text-3xl lg:leading-normal lg:px-2 md:text-2xl md:leading-normal md:px-2  sm:text-2xl sm:leading-normal sm:px-2 text-xl py-10  px-2 ">
-            {{ htmlDecode(currentQuestion.question)  }}</h2>
+            {{ htmlDecode(currentQuestion.question) }}</h2>
 
-        <h2 v-else class="text-center text-6xl p-9 text-red-800 mt-36">Score: <span
+        <h2 v-if="!currentQuestion" class="text-center text-6xl p-9 text-red-800 mt-24">Score: <span
                 class="block text-center text-5xl p-9 text-green-800"
                 :class="{ 'text-red-600': (this.score / this.questions.length * 100) < 50 }"> {{ (this.score /
                     this.questions.length * 100).toFixed(2) }} % </span></h2>
@@ -25,7 +37,7 @@
                 {{ htmlDecode(answer) }}
             </button>
         </form>
-        <button v-if="currentQuestion" @click="nextQuestion"
+        <button v-if="currentQuestion && quiz.title" @click="nextQuestion"
             :class="{ 'cursor-not-allowed': selectedAnswer == '', 'hover:bg-green-300  hover:scale-105': selectedAnswer !== '', 'shake border-red-400 bg-red-200 text-red-900': warnButton }"
             class=" text-center bg-green-200  border-4 border-yellow-400 rounded-xl text-xl lg:text-3xl  w-1/6 h-12  sm:w-1/2 lg:w-1/6  mb-9 lg:h-16 font-semibold    shadow-lg hover:shadow-xl  ">
             Next
@@ -56,7 +68,8 @@ export default {
             body: {},
             response: {},
             error: '', //or [] not to forget to output a div with the error,
-            score: 0
+            score: 0,
+            loaded: false
 
         }
     },
@@ -92,10 +105,11 @@ export default {
         handleClick(e) {
             const audio = new Audio(clickAns)
             audio.play()
-            if (this.selectedAnswer == e.target.__vnode.key) {
+
+            if (this.selectedAnswer == e.target.innerText) {
                 this.selectedAnswer = ''
             } else {
-                this.selectedAnswer = e.target.__vnode.key
+                this.selectedAnswer = e.target.innerText
             }
 
 
@@ -152,7 +166,6 @@ export default {
             this.currentQuestionIndex += 1
             this.currentQuestion = this.questions[this.currentQuestionIndex]
             this.selectedAnswer = ''
-
         },
         htmlDecode(input) {
             var doc = new DOMParser().parseFromString(input, "text/html");
@@ -187,7 +200,9 @@ export default {
                     this.score = quiz.score
 
                     this.currentQuestion = this.questions[this.currentQuestionIndex]
-                    // console.log(this.quiz)
+
+                    this.loaded = true
+                  
                 })
             } else {
                 response.json().then(json => {

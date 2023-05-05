@@ -74,12 +74,12 @@
       </router-link>
 
 
-      <Button v-if="userStore.user.id" @click="resetUser">Reset Scores</Button>
-      <Button v-if="userStore.user.id" @click="deleteUser">Delete account</Button>
-      <Button class="bg-green-500 hover:bg-green-600" @click="$emit('toggleMusic')">
+      <Button class="bg-green-500 hover:bg-green-600 " :class="{'block m-2 ml-0': isOpen==true}" v-if="userStore.user.id" @click="resetUser">Reset Scores</Button>
+      <Button class="bg-green-500 hover:bg-green-600 " :class="{'block m-2 ml-0': isOpen==true}" v-if="userStore.user.id" @click="deleteUser">Delete account</Button>
+      <Button class="bg-green-500 hover:bg-green-600 " :class="{'block m-2 ml-0': isOpen==true}"  @click="$emit('toggleMusic')">
         {{ isMusicOn ? 'Pause music' : 'Play music' }}
       </Button>
-      <Button class="bg-green-500 hover:bg-green-600" @click="$emit('changeSong')">
+      <Button class="bg-green-500 hover:bg-green-600" :class="{'block m-2 ml-0': isOpen==true}"  @click="$emit('changeSong')">
         Change Song
       </Button>
 
@@ -139,7 +139,6 @@ export default {
     }
 
     function deleteUser() {
-      console.log(apiKey)
       playSound()
       fetch('https://late-glitter-4431.fly.dev/api/v54/users/' + userStore.user.id, {
         method: "DELETE",

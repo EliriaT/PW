@@ -103,9 +103,6 @@ export const useQuizzesStore = defineStore('quizzes', {
             let allUserResults = this.getUserResults(userId)
             let userResults = allUserResults.userResults
             let quiz = userResults.filter((q) => q.quizId == quizId)
-            // console.log(quiz)
-            // console.log(quizId)
-            // console.log(userResults)
 
             quiz = quiz[0]
             quiz.score = currentScore
