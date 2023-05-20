@@ -19,6 +19,6 @@ Laboratory Works for the Web Programming University Course
 
 [Laboratory Work #2](https://github.com/EliriaT/PW/tree/main/Lab2)
 
-[Laboratory Work #3](https://eliriat.github.io/smart-to-do-list/))
+[Laboratory Work #3](https://eliriat.github.io/smart-to-do-list/)
 
-[Laboratory Work #4](https://eliriat.github.io/PW/login))
+[Laboratory Work #4](https://eliriat.github.io/PW/login)
