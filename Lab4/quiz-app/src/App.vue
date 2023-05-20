@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       isOpen: false,
-      isMusicOn: false,
+      isMusicOn: true,
       currentSong: '',
 
     }
