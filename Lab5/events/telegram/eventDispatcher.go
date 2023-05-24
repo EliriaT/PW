@@ -23,7 +23,7 @@ type TelegramMeta struct {
 	Username string
 }
 
-func New(client *telegram.Client, storage storage.Storage) *Dispatcher {
+func NewDispatcher(client *telegram.Client, storage storage.Storage) *Dispatcher {
 	return &Dispatcher{tgClient: client, offset: 0, storage: storage}
 }
 

@@ -19,7 +19,7 @@ type Storage struct {
 	basePath string
 }
 
-func New(basePath string) Storage {
+func NewFileStorage(basePath string) Storage {
 	return Storage{basePath: basePath}
 }
 
@@ -72,7 +72,7 @@ func (s Storage) PickRandom(userName string) (page *storage.Link, err error) {
 	return s.decodePage(filepath.Join(filesPath, randomFile.Name()))
 }
 
-func (s Storage) RemoveFile(page *storage.Link) (err error) {
+func (s Storage) Remove(page *storage.Link) (err error) {
 	defer func() { err = e.WrapIfErr("can't delete page ", err) }()
 	fName, err := fileName(page)
 	if err != nil {

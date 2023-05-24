@@ -54,7 +54,7 @@ func (d Dispatcher) savePage(username string, chatId int, text string) (err erro
 	// wrap any errors before returning
 	defer func() { err = e.WrapIfErr("can't do save page command, sorry.", err) }()
 
-	sendMessage := NewMessageSender(chatId, d.tgClient)
+	sendMessage := newMessageSender(chatId, d.tgClient)
 
 	link := &storage.Link{
 		URL: text, UserName: username,
@@ -98,7 +98,7 @@ func (d Dispatcher) randomNews(chatId int, username string) (err error) {
 	return nil
 }
 
-func NewMessageSender(chatID int, tgClient *telegram.Client) func(string) error {
+func newMessageSender(chatID int, tgClient *telegram.Client) func(string) error {
 	return func(message string) error {
 		return tgClient.SendMessage(chatID, message)
 	}
