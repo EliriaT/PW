@@ -10,7 +10,8 @@ const (
 	▪️  /start 						- if you want to greet me again!
 	▪️	/latest_news topic 			- to view 5 links with some interesting latest news!
 	▪️  /save_news 	https://url 	- to save an url to your saved news!
-    ▪️  /saved_news  				- to view all the previously saved news!`
+    ▪️  /saved_news  				- to view all the previously saved news!
+`
 
 	StartMessage = "Hi 👋 ! \n\n" + HelpMessage
 

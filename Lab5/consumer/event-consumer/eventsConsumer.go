@@ -25,7 +25,7 @@ func (t TgConsumer) Start() error {
 		}
 
 		if len(fetchedEvents) == 0 {
-			time.Sleep(time.Second)
+			time.Sleep(1 * time.Second)
 			continue
 		}
 

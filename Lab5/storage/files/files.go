@@ -57,6 +57,9 @@ func (s Storage) PickRandom(userName string) (page *storage.Link, err error) {
 	defer func() { err = e.WrapIfErr("can't pick random page ", err) }()
 	filesPath := filepath.Join(s.basePath, userName)
 
+	//check that the username folder indeed exists
+	//
+
 	files, err := os.ReadDir(filesPath)
 	if err != nil {
 		return nil, err

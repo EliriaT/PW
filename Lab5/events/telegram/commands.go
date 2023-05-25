@@ -1,7 +1,6 @@
 package events
 
 import (
-	"errors"
 	telegram "github.com/EliriaT/News-Tg-Bot/client"
 	e "github.com/EliriaT/News-Tg-Bot/lib/error"
 	"github.com/EliriaT/News-Tg-Bot/storage"
@@ -11,12 +10,15 @@ import (
 )
 
 const (
-	HelpCommand   = "/help"
-	StartCommand  = "/start"
-	RandomCommand = "/random"
+	HelpCommand       = "/help"
+	StartCommand      = "/start"
+	LatestNewsCommand = "/latest_news"
+	ToSaveNewsCommand = "/save_news"
+	SavedNewsCommand  = "/saved_news"
 )
 
 // should be done better inside a different struct, command router
+// check for null userName!!
 func (d Dispatcher) executeCommand(text string, chatID int, userName string) error {
 	text = strings.TrimSpace(text)
 
@@ -27,18 +29,23 @@ func (d Dispatcher) executeCommand(text string, chatID int, userName string) err
 		return d.sendHelpCmd(chatID)
 	case text == StartCommand:
 		return d.sendHi(chatID)
-	case text == RandomCommand:
-		return d.randomNews(chatID, userName)
-	case isAddCommand(text):
+	case text == LatestNewsCommand:
+		return d.sendLatestNews(chatID, userName)
+	case isSaveNewsCommand(text):
 		return d.savePage(userName, chatID, text)
+	case text == SavedNewsCommand:
+		return nil
 	default:
 		return d.tgClient.SendMessage(chatID, UnKnownCommandMessage)
 	}
 
 }
 
-func isAddCommand(text string) bool {
-	return isUrl(text)
+func isSaveNewsCommand(text string) bool {
+	text = strings.TrimSpace(text)
+	parsedCommand := strings.Split(text, " ")
+	return parsedCommand[0] == ToSaveNewsCommand && isUrl(parsedCommand[1])
+
 }
 
 func isUrl(text string) bool {
@@ -80,17 +87,26 @@ func (d Dispatcher) savePage(username string, chatId int, text string) (err erro
 	return nil
 }
 
-func (d Dispatcher) randomNews(chatId int, username string) (err error) {
-	defer func() { err = e.WrapIfErr("can't do random news command.", err) }()
+//func (d Dispatcher) randomNews(chatId int, username string) (err error) {
+//	defer func() { err = e.WrapIfErr("can't do random news command.", err) }()
+//
+//	page, err := d.storage.PickRandom(username)
+//	if err != nil && errors.Is(err, storage.ErrNoSavedLinks) {
+//		if err := d.tgClient.SendMessage(chatId, NoSavedNewsMessage); err != nil {
+//			return err
+//		}
+//	} else if err != nil {
+//		return err
+//	}
+//
+//	if err := d.tgClient.SendMessage(chatId, page.URL); err != nil {
+//		return err
+//	}
+//	return nil
+//}
 
-	page, err := d.storage.PickRandom(username)
-	if err != nil && errors.Is(err, storage.ErrNoSavedLinks) {
-		if err := d.tgClient.SendMessage(chatId, NoSavedNewsMessage); err != nil {
-			return err
-		}
-	} else if err != nil {
-		return err
-	}
+func (d Dispatcher) sendLatestNews(chatId int, username string) (err error) {
+	defer func() { err = e.WrapIfErr("can't do latest news command.", err) }()
 
 	if err := d.tgClient.SendMessage(chatId, page.URL); err != nil {
 		return err

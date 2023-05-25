@@ -1,4 +1,4 @@
-package Lab5
+package main
 
 import (
 	"flag"
@@ -11,7 +11,7 @@ import (
 
 const (
 	botApiHost  = "api.telegram.org"
-	storagePath = "./"
+	storagePath = "./db"
 	batchSize   = 100
 )
 
@@ -31,7 +31,7 @@ func main() {
 
 func mustApiToken() string {
 	token := flag.String(
-		"tg-bot-token",
+		"token",
 		"",
 		"access token to telegram bot",
 	)
