@@ -40,19 +40,3 @@ func main() {
 		log.Fatal("bot is stopped", err)
 	}
 }
-
-//func mustApiToken() string {
-//	token := flag.String(
-//		"token",
-//		"",
-//		"access token to telegram bot",
-//	)
-//
-//	flag.Parse()
-//
-//	if *token == "" {
-//		log.Fatal("token is not specified")
-//	}
-//
-//	return *token
-//}

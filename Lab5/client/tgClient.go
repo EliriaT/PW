@@ -67,6 +67,11 @@ func (c *Client) SendMessage(chatID int, text string) error {
 	return nil
 }
 
+////
+//func (c *Client) SendMessageWithButtonsReply(chatID int, text string, buttons[]string)error  {
+//
+//}
+
 func (c *Client) doRequest(method string, query url.Values) (data []byte, err error) {
 	defer func() { err = e.WrapIfErr("can't do request", err) }()
 
