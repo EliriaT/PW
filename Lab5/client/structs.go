@@ -17,6 +17,7 @@ type IncomingMessage struct {
 }
 
 type From struct {
+	ID       int    `json:"id"`
 	Username string `json:"username"`
 }
 

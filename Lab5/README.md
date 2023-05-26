@@ -1,5 +1,11 @@
 # Lab 5 - Backend development
 
+## Run the app
+
+`go build .` - build the executable
+
+`./News-Tg-Bot` - run the app
+
 ## Story
 
 Imagine, you're a developer at Newsroom SRL, a local company which runs a site for business news. On a regular meeting you propose to launch an Telegram bot along with the web site. Your idea looks nice, but the CTO has requested a proof-of-concept application before main development starts.

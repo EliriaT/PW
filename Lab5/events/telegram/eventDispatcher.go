@@ -4,6 +4,7 @@ import (
 	"errors"
 	telegram "github.com/EliriaT/News-Tg-Bot/client"
 	"github.com/EliriaT/News-Tg-Bot/events"
+	news "github.com/EliriaT/News-Tg-Bot/events/news-client"
 	e "github.com/EliriaT/News-Tg-Bot/lib/error"
 	"github.com/EliriaT/News-Tg-Bot/storage"
 )
@@ -13,18 +14,20 @@ var ErrConvertMeta = errors.New("Type Assert Meta error")
 
 // updates are internal to telegram, while events are internal to the bot application
 type Dispatcher struct {
-	tgClient *telegram.Client
-	offset   int
-	storage  storage.Storage
+	newsClient news.NewsClient
+	tgClient   *telegram.Client
+	offset     int
+	storage    storage.Storage
 }
 
 type TelegramMeta struct {
+	UserId   int
 	ChatId   int
 	Username string
 }
 
-func NewDispatcher(client *telegram.Client, storage storage.Storage) *Dispatcher {
-	return &Dispatcher{tgClient: client, offset: 0, storage: storage}
+func NewDispatcher(tgClient *telegram.Client, storage storage.Storage, newsClient news.NewsClient) *Dispatcher {
+	return &Dispatcher{tgClient: tgClient, offset: 0, storage: storage, newsClient: newsClient}
 }
 
 func (d *Dispatcher) Fetch(limit int) ([]events.Event, error) {
@@ -51,7 +54,7 @@ func (d Dispatcher) Process(event events.Event) error {
 	case events.Message:
 		return d.processMessage(event)
 	default:
-		return e.Wrap("can't process message ", ErrUnknownEventType)
+		return e.Wrap("can't process event message ", ErrUnknownEventType)
 
 	}
 
@@ -62,8 +65,8 @@ func (d Dispatcher) processMessage(event events.Event) error {
 	if err != nil {
 		return e.Wrap("could not process message ", err)
 	}
-	if err := d.executeCommand(event.Text, meta.ChatId, meta.Username); err != nil {
-		e.Wrap("could not process message ", err)
+	if err := d.executeCommand(event.Text, meta.ChatId, meta.Username, meta.UserId); err != nil {
+		return e.Wrap("could not process message ", err)
 	}
 	return nil
 }
@@ -85,7 +88,7 @@ func constructEvent(update telegram.Update) events.Event {
 	}
 
 	if eventType == events.Message {
-		event.Meta = TelegramMeta{ChatId: update.Message.Chat.ID, Username: update.Message.From.Username}
+		event.Meta = TelegramMeta{ChatId: update.Message.Chat.ID, Username: update.Message.From.Username, UserId: update.Message.From.ID}
 	}
 	return event
 }

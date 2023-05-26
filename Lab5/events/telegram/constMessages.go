@@ -7,10 +7,11 @@ const (
 
 	Here are the commands I was taught to execute:
 
-	▪️  /start 						- if you want to greet me again!
-	▪️	/latest_news topic 			- to view 5 links with some interesting latest news!
-	▪️  /save_news 	https://url 	- to save an url to your saved news!
-    ▪️  /saved_news  				- to view all the previously saved news!
+▪️  /start                                       - if you want to greet me again
+▪️	/latest_news [topic]                - to view 5 latest news
+▪️  /save_news 	https://url         - to save an url to your saved news
+▪️  /saved_news                           - to view the previously saved news
+▪️  /help                                        - to view the commands
 `
 
 	StartMessage = "Hi 👋 ! \n\n" + HelpMessage

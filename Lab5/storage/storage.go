@@ -17,8 +17,8 @@ type Storage interface {
 
 // one link
 type Link struct {
-	URL      string
-	UserName string
+	URL string
+	ID  string
 	//Created time.Time
 }
 
@@ -29,7 +29,7 @@ func (l Link) Hash() (string, error) {
 		return "", e.Wrap("can't calculate hash", err)
 	}
 
-	if _, err := io.WriteString(hash, l.UserName); err != nil {
+	if _, err := io.WriteString(hash, l.ID); err != nil {
 		return "", e.Wrap("can't calculate hash", err)
 	}
 	return fmt.Sprintf("%x", hash.Sum(nil)), nil

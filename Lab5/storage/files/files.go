@@ -28,7 +28,7 @@ func (s Storage) Save(link *storage.Link) (err error) {
 	// wrap the error before returning it
 	defer func() { err = e.WrapIfErr("can't save to disk", err) }()
 
-	filePath := filepath.Join(s.basePath, link.UserName)
+	filePath := filepath.Join(s.basePath, link.ID)
 
 	if err := os.MkdirAll(filePath, defaultPerm); err != nil {
 		return err
@@ -82,7 +82,7 @@ func (s Storage) Remove(page *storage.Link) (err error) {
 		return err
 	}
 
-	removablePath := filepath.Join(s.basePath, page.UserName, fName)
+	removablePath := filepath.Join(s.basePath, page.ID, fName)
 
 	if err := os.Remove(removablePath); err != nil {
 		return e.Wrap(fmt.Sprintf("can't delete page %s", removablePath), err)
@@ -97,7 +97,7 @@ func (s Storage) IsPresent(link *storage.Link) (present bool, err error) {
 		return false, err
 	}
 
-	path := filepath.Join(s.basePath, link.UserName, fName)
+	path := filepath.Join(s.basePath, link.ID, fName)
 
 	switch _, err = os.Stat(path); {
 	case errors.Is(err, os.ErrNotExist):
