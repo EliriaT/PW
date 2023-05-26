@@ -36,7 +36,7 @@ func main() {
 	eventConsumer := tgEventConsumer.NewTgConsumer(eventsDispatcher, eventsDispatcher, batchSize)
 
 	log.Println("Bot started !")
-	if err := eventConsumer.StartPull(); err != nil {
+	if err := eventConsumer.StartPush(); err != nil {
 		log.Fatal("bot is stopped", err)
 	}
 }

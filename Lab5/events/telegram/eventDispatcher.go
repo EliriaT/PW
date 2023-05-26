@@ -42,7 +42,7 @@ func (d *Dispatcher) Fetch(limit int) ([]events.Event, error) {
 	parsedEvents := make([]events.Event, 0, len(updates))
 
 	for _, update := range updates {
-		parsedEvents = append(parsedEvents, constructEvent(update))
+		parsedEvents = append(parsedEvents, ConstructEvent(update))
 	}
 
 	d.offset = updates[len(updates)-1].ID + 1
@@ -80,7 +80,7 @@ func meta(event events.Event) (TelegramMeta, error) {
 
 }
 
-func constructEvent(update telegram.Update) events.Event {
+func ConstructEvent(update telegram.Update) events.Event {
 	eventType := fetchType(update)
 	event := events.Event{
 		Type: eventType,

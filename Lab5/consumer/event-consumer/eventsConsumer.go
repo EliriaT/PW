@@ -5,6 +5,7 @@ import (
 	"github.com/EliriaT/News-Tg-Bot/client"
 	"github.com/EliriaT/News-Tg-Bot/consumer"
 	"github.com/EliriaT/News-Tg-Bot/events"
+	dispatcher "github.com/EliriaT/News-Tg-Bot/events/telegram"
 	"log"
 	"net/http"
 	"sync"
@@ -22,24 +23,32 @@ func (t TgConsumer) getUpdate(w http.ResponseWriter, r *http.Request) {
 	case "POST":
 
 		d := json.NewDecoder(r.Body)
-		update := &client.UpdatesResponse{}
+		update := &client.Update{}
 		err := d.Decode(update)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 
+		var event events.Event
+		event = dispatcher.ConstructEvent(*update)
+
+		if err := t.ConsumeEvents([]events.Event{event}); err != nil {
+			log.Printf("[ERROR] COULD NOT HANDLE EVENTS %s \n", err.Error())
+
+		}
+
 	default:
 		w.WriteHeader(http.StatusMethodNotAllowed)
-
 	}
 }
 
 func (t TgConsumer) StartPush() error {
 	http.HandleFunc("/", t.getUpdate)
-	go func() {
-		http.ListenAndServe(":8080", nil)
-	}()
 
+	log.Printf("Server started on port 8080")
+	err := http.ListenAndServe(":8080", nil)
+
+	return err
 }
 
 func (t TgConsumer) StartPull() error {
