@@ -45,3 +45,4 @@ func PagesToString(links []*Link) string {
 }
 
 var ErrNoSavedLinks = errors.New("no saved links")
+var ErrNoSuchSavedLink = errors.New("no such saved link")

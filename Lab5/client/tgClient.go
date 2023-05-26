@@ -67,10 +67,59 @@ func (c *Client) SendMessage(chatID int, text string) error {
 	return nil
 }
 
-////
-//func (c *Client) SendMessageWithButtonsReply(chatID int, text string, buttons[]string)error  {
-//
-//}
+func (c *Client) SendMessageWithButtonsReply(chatID int, text string, buttons []string) (err error) {
+	defer func() { err = e.WrapIfErr("can't send message with buttons", err) }()
+	replyKeyboard := ReplyKeyboardMarkup{OneTimeKeyboard: true}
+	keyboard := make([][]KeyboardButton, 0, len(buttons))
+
+	for _, b := range buttons {
+		keyboard = append(keyboard, []KeyboardButton{{
+			Text: b,
+		}})
+	}
+	replyKeyboard.Keyboard = keyboard
+
+	bytes, err := json.Marshal(replyKeyboard)
+	if err != nil {
+		return err
+	}
+
+	q := url.Values{}
+	q.Add("chat_id", strconv.Itoa(chatID))
+	q.Add("text", text)
+	q.Add("reply_markup", string(bytes))
+
+	_, err = c.doRequest(sendMessageMethod, q)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (c Client) RemoveKeyboard(chatID int, text string) (err error) {
+	defer func() { err = e.WrapIfErr("can't remove keyboard ", err) }()
+	removeKeyboard := ReplyKeyboardRemove{
+		RemoveKeyboard: true,
+	}
+
+	bytes, err := json.Marshal(removeKeyboard)
+	if err != nil {
+		return err
+	}
+
+	q := url.Values{}
+	q.Add("chat_id", strconv.Itoa(chatID))
+	q.Add("text", text)
+	q.Add("reply_markup", string(bytes))
+
+	_, err = c.doRequest(sendMessageMethod, q)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func (c *Client) doRequest(method string, query url.Values) (data []byte, err error) {
 	defer func() { err = e.WrapIfErr("can't do request", err) }()

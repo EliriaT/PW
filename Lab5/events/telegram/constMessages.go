@@ -8,27 +8,34 @@ const (
 	Here are the commands I was taught to execute:
 
 🔸  /start
-   if you want to greet me again
+   If you want to greet me again
 
 🔸	/latest_news [topic]
-   to view 5 latest news
+   To view 5 latest news
 
 🔸  /save_news 	url
-   to save an url to your saved news
+   To save an url to your saved news
 
 🔸  /saved_news
-   to view the previously saved news
+   To view the previously saved news
 
 🔸  /rnd_news                 
-   to view and remove a random saved url 
+   To view and remove a random saved url 
+
+🔸  /remove_news              
+   To view and remove a news link from the saved news
 
 🔸  /help                          
-   to view the commands
+   To view the commands
 `
 
 	StartMessage = "Hi 👋 ! \n\n" + HelpMessage
 
-	UnKnownCommandMessage = "Invalid command 🐸 ! I am sorry I was not taught what to do in this situations."
-	NoSavedNewsMessage    = "You have no saved news. 🤷🏽‍♀️ "
+	UnKnownCommandMessage = "Invalid command 🐙 ! I am sorry I was not taught what to do in this situations."
+	NoSavedNewsMessage    = "You have no saved news. 🤷‍♀️️ "
 	SavedNewsMessage      = "You successfully saved a message!🤸🏻‍♀️ To view all saved messages: /saved_news ."
+	SelectNews            = "Please select an URL to read and delete it from the saved news.📌"
+	NoSuchLink            = "No such link found in saved news! 🙅‍♀️"
+	ProvideURL            = " ✍🏻 Please provide below a valid an URL to save: "
+	NoNews                = "No news available for this topic!🧐"
 )

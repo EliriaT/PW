@@ -2,6 +2,7 @@ package events
 
 import (
 	"errors"
+	"fmt"
 	telegram "github.com/EliriaT/News-Tg-Bot/client"
 	e "github.com/EliriaT/News-Tg-Bot/lib/error"
 	"github.com/EliriaT/News-Tg-Bot/storage"
@@ -21,12 +22,20 @@ const (
 	ReadAndRemove     = "/remove_news"
 )
 
+var previousCommand string
+
 // should be done better inside a different struct, command router
 // check for null userName!!
-func (d Dispatcher) executeCommand(text string, chatID int, userName string, userID int) error {
+func (d *Dispatcher) executeCommand(text string, chatID int, userName string, userID int) error {
 	text = strings.TrimSpace(text)
 
 	log.Printf("received command %s from %s in chatID %s", text, userName, chatID)
+
+	defer func() {
+		if isUrl(text) == false {
+			previousCommand = strings.Clone(text)
+		}
+	}()
 
 	switch {
 	case text == HelpCommand:
@@ -45,6 +54,17 @@ func (d Dispatcher) executeCommand(text string, chatID int, userName string, use
 		return d.randomNews(chatID, userID)
 	case text == ReadAndRemove:
 		return d.readAndRemove(chatID, userID)
+	case isUrl(text):
+		switch previousCommand {
+		case ToSaveNewsCommand:
+			return d.savePage(chatID, text, userID)
+		case ReadAndRemove:
+			return d.removeUrl(chatID, userID, text)
+		default:
+			return d.tgClient.SendMessage(chatID, UnKnownCommandMessage)
+
+		}
+
 	default:
 		return d.tgClient.SendMessage(chatID, UnKnownCommandMessage)
 	}
@@ -54,7 +74,9 @@ func (d Dispatcher) executeCommand(text string, chatID int, userName string, use
 func isLatestNewsCommand(text string) bool {
 	//	here the topic is formed out of multiple words
 	parsedCommand := strings.Fields(text)
-
+	if len(parsedCommand) < 1 {
+		return false
+	}
 	if parsedCommand[0] != LatestNewsCommand {
 		return false
 	}
@@ -64,9 +86,13 @@ func isLatestNewsCommand(text string) bool {
 
 func isSaveNewsCommand(text string) bool {
 	parsedCommand := strings.Fields(text)
-	if len(parsedCommand) != 2 {
+	if len(parsedCommand) != 2 && len(parsedCommand) != 1 {
 		return false
 	}
+	if len(parsedCommand) == 1 {
+		return parsedCommand[0] == ToSaveNewsCommand
+	}
+
 	return parsedCommand[0] == ToSaveNewsCommand && isUrl(parsedCommand[1])
 
 }
@@ -91,6 +117,10 @@ func (d Dispatcher) savePage(chatId int, url string, userId int) (err error) {
 	defer func() { err = e.WrapIfErr("can't do save page command, sorry:", err) }()
 
 	sendMessage := newMessageSender(chatId, d.tgClient)
+
+	if url == "" {
+		return sendMessage(ProvideURL)
+	}
 
 	link := &storage.Link{
 		URL: url, UserID: strconv.Itoa(userId),
@@ -168,7 +198,7 @@ func (d Dispatcher) sendLatestNews(chatId int, username string, topic string) (e
 
 	response := d.newsClient.NewsToString(newsStruct)
 	if response == "" {
-		if err := d.tgClient.SendMessage(chatId, "No news available for this topic!"); err != nil {
+		if err := d.tgClient.SendMessage(chatId, NoNews); err != nil {
 			return err
 		}
 		return nil
@@ -181,8 +211,43 @@ func (d Dispatcher) sendLatestNews(chatId int, username string, topic string) (e
 }
 
 func (d Dispatcher) readAndRemove(chatID int, userID int) (err error) {
+	defer func() { err = e.WrapIfErr("can't do read and remove a news command.", err) }()
 
-	return nil
+	links, err := d.storage.GetAllLinks(strconv.Itoa(userID))
+	if err != nil && errors.Is(err, storage.ErrNoSavedLinks) {
+		if err := d.tgClient.SendMessage(chatID, NoSavedNewsMessage); err != nil {
+			return err
+		}
+		return nil
+	} else if err != nil {
+		return err
+	}
+
+	urls := make([]string, 0, len(links))
+	for _, l := range links {
+		urls = append(urls, l.URL)
+	}
+
+	err = d.tgClient.SendMessageWithButtonsReply(chatID, SelectNews, urls)
+	return err
+}
+
+func (d Dispatcher) removeUrl(chatID, userID int, url string) (err error) {
+	defer func() { err = e.WrapIfErr("can't do remove confirm a news command.", err) }()
+
+	link := &storage.Link{
+		URL: url, UserID: strconv.Itoa(userID),
+	}
+	if err := d.storage.Remove(link); err != nil {
+		if errors.Is(err, storage.ErrNoSuchSavedLink) {
+			err := d.tgClient.RemoveKeyboard(chatID, fmt.Sprintf(NoSuchLink))
+			return err
+		}
+		return err
+	}
+
+	return d.tgClient.RemoveKeyboard(chatID, fmt.Sprintf("To read: \n %s \n\n The link was removed from saved news.", url))
+
 }
 
 func newMessageSender(chatID int, tgClient *telegram.Client) func(string) error {

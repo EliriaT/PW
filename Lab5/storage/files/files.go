@@ -120,6 +120,14 @@ func (s Storage) GetAllLinks(userID string) (pages []*storage.Link, err error) {
 
 func (s Storage) Remove(page *storage.Link) (err error) {
 	defer func() { err = e.WrapIfErr("can't delete page ", err) }()
+	present, err := s.IsLinkPresent(page)
+	if err != nil {
+		return err
+	}
+	if !present {
+		return storage.ErrNoSuchSavedLink
+	}
+
 	fName, err := fileName(page)
 	if err != nil {
 		return err
@@ -128,6 +136,7 @@ func (s Storage) Remove(page *storage.Link) (err error) {
 	removablePath := filepath.Join(s.basePath, page.UserID, fName)
 
 	if err := os.Remove(removablePath); err != nil {
+
 		return e.Wrap(fmt.Sprintf("can't delete page %s", removablePath), err)
 	}
 	return nil

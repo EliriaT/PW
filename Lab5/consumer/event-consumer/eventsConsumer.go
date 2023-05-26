@@ -1,9 +1,12 @@
 package tg_event_consumer
 
 import (
+	"encoding/json"
+	"github.com/EliriaT/News-Tg-Bot/client"
 	"github.com/EliriaT/News-Tg-Bot/consumer"
 	"github.com/EliriaT/News-Tg-Bot/events"
 	"log"
+	"net/http"
 	"sync"
 	"time"
 )
@@ -14,7 +17,32 @@ type TgConsumer struct {
 	batchSize int
 }
 
-func (t TgConsumer) Start() error {
+func (t TgConsumer) getUpdate(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case "POST":
+
+		d := json.NewDecoder(r.Body)
+		update := &client.UpdatesResponse{}
+		err := d.Decode(update)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+
+	default:
+		w.WriteHeader(http.StatusMethodNotAllowed)
+
+	}
+}
+
+func (t TgConsumer) StartPush() error {
+	http.HandleFunc("/", t.getUpdate)
+	go func() {
+		http.ListenAndServe(":8080", nil)
+	}()
+
+}
+
+func (t TgConsumer) StartPull() error {
 	for {
 		fetchedEvents, err := t.fetcher.Fetch(t.batchSize)
 		if err != nil {
