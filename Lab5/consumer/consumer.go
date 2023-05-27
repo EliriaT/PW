@@ -6,4 +6,5 @@ type Consumer interface {
 	StartPull() error
 	// webhooks push mechanism
 	StartPush() error
+	ServeRequest(body string) (err error)
 }

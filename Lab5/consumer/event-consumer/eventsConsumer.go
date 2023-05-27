@@ -6,6 +6,7 @@ import (
 	"github.com/EliriaT/News-Tg-Bot/consumer"
 	"github.com/EliriaT/News-Tg-Bot/events"
 	dispatcher "github.com/EliriaT/News-Tg-Bot/events/telegram"
+	e "github.com/EliriaT/News-Tg-Bot/lib/error"
 	"log"
 	"net/http"
 	"sync"
@@ -49,6 +50,25 @@ func (t TgConsumer) StartPush() error {
 	err := http.ListenAndServe(":8080", nil)
 
 	return err
+}
+
+func (t TgConsumer) ServeRequest(data string) (err error) {
+	defer func() { err = e.WrapIfErr("can't serve lambda request", err) }()
+	update := &client.Update{}
+
+	err = json.Unmarshal([]byte(data), update)
+	if err != nil {
+		return err
+	}
+
+	var event events.Event
+	event = dispatcher.ConstructEvent(*update)
+
+	if err := t.ConsumeEvents([]events.Event{event}); err != nil {
+		log.Printf("[ERROR] COULD NOT HANDLE EVENTS %s \n", err.Error())
+		return err
+	}
+	return nil
 }
 
 func (t TgConsumer) StartPull() error {

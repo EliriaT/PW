@@ -34,8 +34,8 @@ const (
 	UnKnownCommandMessage = "Invalid command 🐙 ! I am sorry I was not taught what to do in this situations."
 	NoSavedNewsMessage    = "You have no saved news. 🤷‍♀️️ "
 	SavedNewsMessage      = "You successfully saved a message!🤸🏻‍♀️ To view all saved messages: /saved_news ."
-	SelectNews            = "Please select an URL to read and delete it from the saved news.📌"
+	SelectNews            = "📌Please select an URL to read and delete it from the saved news."
 	NoSuchLink            = "No such link found in saved news! 🙅‍♀️"
-	ProvideURL            = " ✍🏻 Please provide below a valid an URL to save: "
+	ProvideURL            = "✍🏻 Please provide below a valid an URL to save: "
 	NoNews                = "No news available for this topic!🧐"
 )
