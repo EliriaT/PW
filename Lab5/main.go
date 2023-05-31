@@ -19,6 +19,7 @@ const (
 	newsBasePath = "search"
 )
 
+// The commented code was before deploying to aws lambda
 func main() {
 	//var myEnv map[string]string
 	//myEnv, err := godotenv.Read("app.env")
